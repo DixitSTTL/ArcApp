@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
 import com.app.myinapp.data.model.Video
 import com.app.myinapp.presentation.main.MainScreenInteract
@@ -21,22 +21,22 @@ import kotlinx.coroutines.Job
 
 
 @Composable
-fun VideoList(videoList: List<Video>, uiAction: (MainScreenInteract) -> Job) {
+fun VideoList(videoList: LazyPagingItems<Video>, uiAction: (MainScreenInteract) -> Job) {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize(),
         columns = GridCells.Fixed(2),
     ) {
-        items(videoList) { item ->
+        items(videoList.itemCount) { index ->
 
             AsyncImage(
-                model = item.image,
+                model = videoList[index]?.image,
                 contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
                     .clickable {
-                        uiAction.invoke(MainScreenInteract.navigateVideoPreview(item))
+                        uiAction.invoke(MainScreenInteract.navigateVideoPreview(videoList[index]!!))
                     }
                     .padding(2.dp)
                     .clip(RoundedCornerShape(5)),

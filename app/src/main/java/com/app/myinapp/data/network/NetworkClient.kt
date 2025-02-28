@@ -78,4 +78,20 @@ class NetworkClient(private val client: HttpClient) {
         return response.body<ImageDTO>()
 
     }
+
+    suspend fun getFlowVideoList(page: Int): VideoDTO {
+
+
+        val response = client.get(NetworkConstants.video) {
+            url {
+                parameters.append("page", "${page}")
+                parameters.append("per_page", "20")
+            }
+            headers {
+                appendAll(Headers())
+            }
+        }
+        return response.body<VideoDTO>()
+
+    }
 }

@@ -1,18 +1,26 @@
 package com.app.myinapp.presentation.main
 
 import android.app.Application
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.app.myinapp.data.model.Photo
 import com.app.myinapp.data.utils.ResponseResult
+import com.app.myinapp.domain.jobs.MyJobService
 import com.app.myinapp.domain.usecase.UseCaseMainScreen
 import com.app.myinapp.domain.workmanager.FirstWorker
 import com.app.myinapp.domain.workmanager.SecondWorker
 import com.app.myinapp.presentation.base.BaseViewModel
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -21,6 +29,13 @@ class MainScreenViewModel(
     private var myApp: Application
 ) : BaseViewModel<MainScreenState, MainScreenInteract>(MainScreenState()) {
 
+    init {
+        if (state.value.imageFlowList == emptyFlow<Photo>()) {
+            fetchFlowImage()
+            fetchFlowVideo()
+
+        }
+    }
 
     fun fetchImage() {
         viewModelScope.launch {
@@ -76,8 +91,23 @@ class MainScreenViewModel(
 
     }
 
-    fun fetchFlowImage() {
+    private fun fetchFlowVideo() {
+        viewModelScope.launch {
+            setDataState(state.value.copy(isLoading = true))
+            val responseFlow = useCaseMainScreen.fetchFlowVideo().cachedIn(viewModelScope)
+            setDataState(state.value.copy(isLoading = false, videoFlowList = responseFlow))
+        }
+    }
 
+    private fun fetchFlowImage() {
+        viewModelScope.launch {
+            setDataState(state.value.copy(isLoading = true))
+            val responseFlow = useCaseMainScreen.fetchFlowImage().cachedIn(viewModelScope)
+            setDataState(state.value.copy(isLoading = false, imageFlowList = responseFlow))
+        }
+    }
+
+    fun startWorkManager() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.METERED)
 //            .setRequiresBatteryNotLow(true)
@@ -87,7 +117,7 @@ class MainScreenViewModel(
 
         val firstRequest: OneTimeWorkRequest =
             OneTimeWorkRequestBuilder<FirstWorker>()
-                .setInitialDelay(10, TimeUnit.SECONDS)
+                .setInitialDelay(15, TimeUnit.SECONDS)
                 .setConstraints(constraints)
                 .build()
 
@@ -96,17 +126,24 @@ class MainScreenViewModel(
                 .setInitialDelay(3, TimeUnit.SECONDS)
                 .setConstraints(constraints)
                 .build()
-        Log.d("TAG", "fetchFlowImage: $myApp")
 
 
         WorkManager.getInstance(myApp).enqueue(firstRequest)
+    }
 
 
-//        viewModelScope.launch {
-//            setDataState(state.value.copy(isLoading = true))
-//            val responseFlow = useCaseMainScreen.fetchFlowImage()
-//            setDataState(state.value.copy(isLoading = false, imageFlowList = responseFlow))
-//        }
+    fun startJob() {
+        Log.d("MyJobService", "viewmodel: " + Thread.currentThread())
+
+        val componentName = ComponentName(myApp, MyJobService::class.java)
+        val jobInfo = JobInfo.Builder(1, componentName)
+//            .setRequiresCharging(true) // You can set any criteria here
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+//            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            .build()
+
+        val jobScheduler = myApp.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        jobScheduler.schedule(jobInfo)
     }
 
 }

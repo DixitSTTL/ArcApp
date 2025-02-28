@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,14 +29,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.app.myinapp.data.model.Photo
 import com.app.myinapp.presentation.main.composable.ImageList
 import com.app.myinapp.presentation.main.composable.VideoList
 import com.app.myinapp.presentation.routes.IMAGE_PREVIEW_SCREEN
 import com.app.myinapp.presentation.routes.SEARCH_SCREEN
 import com.app.myinapp.presentation.routes.VIDEO_PREVIEW_SCREEN
 import com.google.gson.Gson
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -44,13 +44,9 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
     val pagerState = rememberPagerState(pageCount = { 2 })
     val titles = listOf("Images", "Videos")
     val state by viewModel.state.collectAsState()
-    val stateFlow = state.imageFlowList.collectAsLazyPagingItems()
-
-    LaunchedEffect(Unit) {
-        if (state.imageFlowList === emptyFlow<Photo>()) {
-            viewModel.fetchFlowImage()
-        }
-    }
+    val stateImageFlow = state.imageFlowList.collectAsLazyPagingItems()
+    val stateVideoFlow = state.videoFlowList.collectAsLazyPagingItems()
+    val coroutineScope = rememberCoroutineScope()
 
 
     LaunchedEffect(Unit) {
@@ -132,9 +128,9 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
                                 },
                                 selected = pagerState.currentPage == index,
                                 onClick = {
-                                    /*coroutineScope.launch {
+                                    coroutineScope.launch {
                                         pagerState.animateScrollToPage(index)
-                                    }*/
+                                    }
                                 },
                             )
                         }
@@ -151,11 +147,11 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
                         when (it) {
 
                             0 -> {
-                                ImageList(stateFlow, viewModel::sendAction)
+                                ImageList(stateImageFlow, viewModel::sendAction)
                             }
 
                             1 -> {
-                                VideoList(state.videoList, viewModel::sendAction)
+                                VideoList(stateVideoFlow, viewModel::sendAction)
 
                             }
 

@@ -3,6 +3,7 @@ package com.app.myinapp.presentation
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -58,6 +59,9 @@ fun App() {
             }
 
             composable<routes.SEARCH_SCREEN> { backStackEntry ->
+                BackHandler {
+                    navController.popBackStack()
+                }
                 SearchScreen(navController)
             }
 
@@ -65,6 +69,10 @@ fun App() {
                 routes.IMAGE_PREVIEW_SCREEN.route,
                 arguments = listOf(navArgument("Photo") { type = NavType.StringType })
             ) { backStackEntry ->
+                BackHandler {
+                    navController.popBackStack()
+                }
+
                 backStackEntry.arguments?.let {
                     val dataJson = backStackEntry.arguments?.getString("Photo")
                     val data = Gson().fromJson(dataJson, Photo::class.java) // Decode recipe JSON
@@ -78,12 +86,18 @@ fun App() {
             }
 
             composable<routes.CORE_IMAGE_PREVIEW_SCREEN> { backStackEntry ->
+                BackHandler {
+                    navController.popBackStack()
+                }
 //                ImagePreviewScreen(navController, data)
                 VideoPreviewScreen(navController)
 
             }
 
             composable<routes.VIDEO_PREVIEW_SCREEN> { backStackEntry ->
+                BackHandler {
+                    navController.popBackStack()
+                }
                 VideoPreviewScreen(navController)
             }
 

@@ -10,5 +10,6 @@ data class MainScreenState(
     var isLoading: Boolean = true,
     var imageList: List<Photo> = emptyList(),
     var videoList: List<Video> = emptyList(),
+    var videoFlowList: Flow<PagingData<Video>> = emptyFlow(),
     var imageFlowList: Flow<PagingData<Photo>> = emptyFlow(),
 )

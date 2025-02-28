@@ -3,6 +3,7 @@ package com.app.myinapp.domain.usecase
 import androidx.paging.PagingData
 import com.app.myinapp.data.model.ImageDTO
 import com.app.myinapp.data.model.Photo
+import com.app.myinapp.data.model.Video
 import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.data.utils.ResponseResult
 import com.app.myinapp.domain.repository.MainScreenRepository
@@ -20,5 +21,9 @@ class UseCaseMainScreen(private val mainScreenRepository: MainScreenRepository) 
 
     suspend fun fetchFlowImage(): Flow<PagingData<Photo>> {
         return mainScreenRepository.getFlowImageList()
+    }
+
+    suspend fun fetchFlowVideo(): Flow<PagingData<Video>> {
+        return mainScreenRepository.getFlowVideoList()
     }
 }
