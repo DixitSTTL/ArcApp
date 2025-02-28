@@ -14,7 +14,7 @@ class UseCaseMainScreen(private val mainScreenRepository: MainScreenRepository) 
         return mainScreenRepository.getImageList()
     }
 
-    suspend fun fetchVideo(): ResponseResult<VideoDTO>{
+    suspend fun fetchVideo(): ResponseResult<VideoDTO> {
         return mainScreenRepository.getVideoList()
     }
 

@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,9 +25,11 @@ import kotlinx.coroutines.Job
 @Composable
 fun ImageList(imageList: LazyPagingItems<Photo>, uiAction: (MainScreenInteract) -> Job) {
 
-    LazyVerticalGrid(modifier = Modifier
-        .fillMaxSize(),
-        columns = GridCells.Fixed(3),) {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .fillMaxSize(),
+        columns = GridCells.Fixed(3),
+    ) {
         items(imageList.itemCount) { index ->
             AsyncImage(
                 model = imageList[index]?.src?.portrait,

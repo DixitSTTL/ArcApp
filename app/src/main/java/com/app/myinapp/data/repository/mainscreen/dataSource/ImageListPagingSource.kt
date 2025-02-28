@@ -3,11 +3,10 @@ package com.app.myinapp.data.repository.mainscreen.dataSource
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.app.myinapp.data.model.ImageDTO
 import com.app.myinapp.data.model.Photo
 import com.app.myinapp.data.network.NetworkClient
 
-class ImageListPagingSource(private val networkClient : NetworkClient): PagingSource<Int, Photo>() {
+class ImageListPagingSource(private val networkClient: NetworkClient) : PagingSource<Int, Photo>() {
     override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
@@ -21,20 +20,19 @@ class ImageListPagingSource(private val networkClient : NetworkClient): PagingSo
         return try {
             val page = params.key ?: 2
             val response = networkClient.getFlowImageList(page = page)
-            Log.d("TAG", "load: "+response)
+            Log.d("TAG", "load: " + response)
 
             LoadResult.Page(
-                data = response.photos ,
+                data = response.photos,
                 prevKey = if (page == 1) null else page.minus(1),
                 nextKey = page.plus(1),
             )
         } catch (e: Exception) {
-            Log.d("TAG", "loadeee: "+e.message)
+            Log.d("TAG", "loadeee: " + e.message)
 
             LoadResult.Error(e)
 
         }
-
 
 
     }

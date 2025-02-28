@@ -2,8 +2,8 @@ package com.app.myinapp.data.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class VideoDTO(
@@ -58,7 +58,7 @@ data class User(
     val name: String,
     @SerialName("url")
     val url: String
-):Parcelable
+) : Parcelable
 
 @Serializable
 data class VideoFile(

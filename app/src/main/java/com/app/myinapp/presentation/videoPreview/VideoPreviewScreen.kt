@@ -7,5 +7,4 @@ import androidx.navigation.NavHostController
 fun VideoPreviewScreen(navController: NavHostController) {
 
 
-    
 }

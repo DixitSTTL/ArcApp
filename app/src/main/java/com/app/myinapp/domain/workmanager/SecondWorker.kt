@@ -8,7 +8,7 @@ import androidx.work.WorkerParameters
 class SecondWorker(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
     override fun doWork(): Result {
-       val person = inputData.getString("person")
+        val person = inputData.getString("person")
 
 
         Log.d("TAG", "doWork: hello $person")

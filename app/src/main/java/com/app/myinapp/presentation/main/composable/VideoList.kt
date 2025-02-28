@@ -21,7 +21,7 @@ import kotlinx.coroutines.Job
 
 
 @Composable
-fun VideoList(videoList: List<Video>, uiAction: (MainScreenInteract) -> Job){
+fun VideoList(videoList: List<Video>, uiAction: (MainScreenInteract) -> Job) {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize(),

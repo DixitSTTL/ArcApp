@@ -12,18 +12,21 @@ import com.app.myinapp.data.utils.ResponseResult
 import com.app.myinapp.domain.repository.MainScreenRepository
 import kotlinx.coroutines.flow.Flow
 
-class MainScreenRepositoryImpl(private val networkClient : NetworkClient, private val imageListPagingSource: ImageListPagingSource): MainScreenRepository {
-    override suspend fun getImageList():ResponseResult<ImageDTO> {
+class MainScreenRepositoryImpl(
+    private val networkClient: NetworkClient,
+    private val imageListPagingSource: ImageListPagingSource
+) : MainScreenRepository {
+    override suspend fun getImageList(): ResponseResult<ImageDTO> {
         return networkClient.getImageList()
     }
 
     override suspend fun getFlowImageList(): Flow<PagingData<Photo>> = Pager(
-        config = PagingConfig(20),pagingSourceFactory = {
+        config = PagingConfig(20), pagingSourceFactory = {
             imageListPagingSource
         }
     ).flow
 
-    override suspend fun getVideoList(): ResponseResult<VideoDTO>  {
+    override suspend fun getVideoList(): ResponseResult<VideoDTO> {
         return networkClient.getVideoList()
     }
 }

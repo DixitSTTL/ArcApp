@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myinapp.data.model.Photo
-import com.app.myinapp.data.model.User
 import com.app.myinapp.presentation.main.composable.ImageList
 import com.app.myinapp.presentation.main.composable.VideoList
 import com.app.myinapp.presentation.routes.IMAGE_PREVIEW_SCREEN
@@ -45,7 +44,7 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
     val pagerState = rememberPagerState(pageCount = { 2 })
     val titles = listOf("Images", "Videos")
     val state by viewModel.state.collectAsState()
-    val stateFlow=  state.imageFlowList.collectAsLazyPagingItems()
+    val stateFlow = state.imageFlowList.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         if (state.imageFlowList === emptyFlow<Photo>()) {
@@ -56,31 +55,43 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
 
     LaunchedEffect(Unit) {
         viewModel.uiAction.collect {
-                when (it) {
-                    is MainScreenInteract.navigateImagePreview -> {
-                        val data = Uri.encode(Gson().toJson(it.data))
-                        navController.navigate("${IMAGE_PREVIEW_SCREEN}/${data}")}
-                    is MainScreenInteract.navigateSearch ->{navController.navigate(SEARCH_SCREEN)}
-                    is MainScreenInteract.navigateVideoPreview -> {navController.navigate(VIDEO_PREVIEW_SCREEN){launchSingleTop = true }}
+            when (it) {
+                is MainScreenInteract.navigateImagePreview -> {
+                    val data = Uri.encode(Gson().toJson(it.data))
+                    navController.navigate("${IMAGE_PREVIEW_SCREEN}/${data}")
+                }
+
+                is MainScreenInteract.navigateSearch -> {
+                    navController.navigate(SEARCH_SCREEN)
+                }
+
+                is MainScreenInteract.navigateVideoPreview -> {
+                    navController.navigate(VIDEO_PREVIEW_SCREEN) { launchSingleTop = true }
                 }
             }
+        }
 
     }
 
-    Scaffold {it
+    Scaffold {
+        it
 
-        Box(Modifier.padding(it)){
+        Box(Modifier.padding(it)) {
             if (state.isLoading) {
-                Box(Modifier.fillMaxSize()){
+                Box(Modifier.fillMaxSize()) {
 
-                    CircularProgressIndicator(Modifier.align(Alignment.Center), color = Color.Yellow)
+                    CircularProgressIndicator(
+                        Modifier.align(Alignment.Center),
+                        color = Color.Yellow
+                    )
                 }
-            }
-            else{
-                Column(modifier = Modifier
+            } else {
+                Column(
+                    modifier = Modifier
 
-                    .fillMaxSize()
-                    .background(Color.White)) {
+                        .fillMaxSize()
+                        .background(Color.White)
+                ) {
                     TabRow(
                         selectedTabIndex = pagerState.currentPage,
                         divider = {
@@ -140,11 +151,11 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
                         when (it) {
 
                             0 -> {
-                                ImageList(stateFlow,viewModel::sendAction)
+                                ImageList(stateFlow, viewModel::sendAction)
                             }
 
                             1 -> {
-                                VideoList(state.videoList,viewModel::sendAction)
+                                VideoList(state.videoList, viewModel::sendAction)
 
                             }
 
@@ -154,7 +165,6 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
                 }
             }
         }
-
 
 
     }

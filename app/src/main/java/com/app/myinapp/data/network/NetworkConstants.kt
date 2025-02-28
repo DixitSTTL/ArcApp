@@ -4,7 +4,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.util.StringValues
 
 
-object  NetworkConstants{
+object NetworkConstants {
 
     val BASE_URL = "api.pexels.com/v1"
 
@@ -14,7 +14,10 @@ object  NetworkConstants{
 
     fun Headers(): StringValues {
         return StringValues.build {
-            append(HttpHeaders.Authorization, "x1rqvPKlrWj15hUunRzWy6T9WXLpJrXGFVcWi7fxaH1rb96FmSaVWKed")
+            append(
+                HttpHeaders.Authorization,
+                "x1rqvPKlrWj15hUunRzWy6T9WXLpJrXGFVcWi7fxaH1rb96FmSaVWKed"
+            )
         }
     }
 }

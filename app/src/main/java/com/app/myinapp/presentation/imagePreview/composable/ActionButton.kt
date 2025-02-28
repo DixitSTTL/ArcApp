@@ -16,11 +16,22 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun ActionButton(onclick: () -> Unit, icon: Int){
+fun ActionButton(onclick: () -> Unit, icon: Int) {
 
     Box(
-        modifier = Modifier.size(60.dp).clip(RoundedCornerShape(50)).clickable { onclick() }.background(Color.Gray)) {
-        Icon(painter = painterResource(icon), contentDescription = "", modifier = Modifier.size(22.dp).align(Alignment.Center))
+        modifier = Modifier
+            .size(60.dp)
+            .clip(RoundedCornerShape(50))
+            .clickable { onclick() }
+            .background(Color.Gray)
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = "",
+            modifier = Modifier
+                .size(22.dp)
+                .align(Alignment.Center)
+        )
     }
 
 }
