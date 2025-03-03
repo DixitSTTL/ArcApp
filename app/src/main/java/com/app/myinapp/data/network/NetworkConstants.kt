@@ -11,6 +11,7 @@ object NetworkConstants {
     //route
     val curated = "curated"
     val video = "videos/popular/"
+    val search = "search"
 
     fun Headers(): StringValues {
         return StringValues.build {

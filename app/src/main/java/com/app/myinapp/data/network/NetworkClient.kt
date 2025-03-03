@@ -69,7 +69,7 @@ class NetworkClient(private val client: HttpClient) {
         val response = client.get(NetworkConstants.curated) {
             url {
                 parameters.append("page", "${page}")
-                parameters.append("per_page", "20")
+                parameters.append("per_page", "10")
             }
             headers {
                 appendAll(Headers())
@@ -85,7 +85,7 @@ class NetworkClient(private val client: HttpClient) {
         val response = client.get(NetworkConstants.video) {
             url {
                 parameters.append("page", "${page}")
-                parameters.append("per_page", "20")
+                parameters.append("per_page", "10")
             }
             headers {
                 appendAll(Headers())
@@ -93,5 +93,19 @@ class NetworkClient(private val client: HttpClient) {
         }
         return response.body<VideoDTO>()
 
+    }
+
+    suspend fun getSearchFlowImageList(page: Int, query: String): ImageDTO {
+        val response = client.get(NetworkConstants.search) {
+            url {
+                parameters.append("page", "${page}")
+                parameters.append("per_page", "10")
+                parameters.append("query", query)
+            }
+            headers {
+                appendAll(Headers())
+            }
+        }
+        return response.body<ImageDTO>()
     }
 }

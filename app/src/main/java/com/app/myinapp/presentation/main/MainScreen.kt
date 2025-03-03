@@ -10,25 +10,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.app.myinapp.presentation.main.composable.AppBar
 import com.app.myinapp.presentation.main.composable.ImageList
 import com.app.myinapp.presentation.main.composable.VideoList
 import com.app.myinapp.presentation.routes.IMAGE_PREVIEW_SCREEN
@@ -38,6 +41,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel = koinViewModel()) {
 
@@ -47,6 +51,7 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
     val stateImageFlow = state.imageFlowList.collectAsLazyPagingItems()
     val stateVideoFlow = state.videoFlowList.collectAsLazyPagingItems()
     val coroutineScope = rememberCoroutineScope()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
 
     LaunchedEffect(Unit) {
@@ -68,101 +73,92 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
         }
 
     }
+    Scaffold(
+        topBar = {
+            AppBar(
+                scrollBehavior,
+                onClick = { viewModel.sendAction(MainScreenInteract.navigateSearch()) },
+            )
+        },
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+    ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
 
-    Scaffold {
-        it
+            Column(
+                modifier = Modifier
 
-        Box(Modifier.padding(it)) {
-            if (state.isLoading) {
-                Box(Modifier.fillMaxSize()) {
+                    .fillMaxSize()
+                    .background(Color.White)
+            ) {
+                TabRow(
+                    selectedTabIndex = pagerState.currentPage,
+                    divider = {
 
-                    CircularProgressIndicator(
-                        Modifier.align(Alignment.Center),
-                        color = Color.Yellow
-                    )
-                }
-            } else {
-                Column(
+                    },
                     modifier = Modifier
-
-                        .fillMaxSize()
-                        .background(Color.White)
+                        .fillMaxWidth(),
+                    indicator = {
+                        TabRowDefaults.Indicator(
+                            modifier = Modifier
+                                .clip(
+                                    shape = RoundedCornerShape(
+                                        topEnd = 20.dp,
+                                        topStart = 20.dp
+                                    )
+                                )
+                                .tabIndicatorOffset(it[pagerState.currentPage]),
+                            color = Color.Cyan,
+                            height = 3.dp
+                        )
+                    },
+                    containerColor = Color.Transparent,
+                    contentColor = Color.Black,
                 ) {
-                    TabRow(
-                        selectedTabIndex = pagerState.currentPage,
-                        divider = {
 
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        indicator = {
-                            TabRowDefaults.Indicator(
-                                modifier = Modifier
-                                    .clip(
-                                        shape = RoundedCornerShape(
-                                            topEnd = 20.dp,
-                                            topStart = 20.dp
-                                        )
-                                    )
-                                    .tabIndicatorOffset(it[pagerState.currentPage]),
-                                color = Color.Cyan,
-                                height = 3.dp
-                            )
-                        },
-                        containerColor = Color.Transparent,
-                        contentColor = Color.Black,
-                    ) {
+                    titles.forEachIndexed { index, title ->
+                        Tab(
+                            text = {
+                                Text(
+                                    text = title,
+                                    color = Color.Black,
+                                    /*  style = TextStyle(
+                                      fontFamily = FontFamily(Font(R.font.alegreya_bold)),
+                                      fontSize = 16.sp
+                                  )*/
+                                )
 
-                        titles.forEachIndexed { index, title ->
-                            Tab(
-                                text = {
-                                    Text(
-                                        text = title,
-                                        color = Color.Black,
-                                        /*  style = TextStyle(
-                                              fontFamily = FontFamily(Font(R.font.alegreya_bold)),
-                                              fontSize = 16.sp
-                                          )*/
-                                    )
-
-                                },
-                                selected = pagerState.currentPage == index,
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                },
-                            )
-                        }
+                            },
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                        )
                     }
+                }
 
-                    HorizontalPager(
-                        state = pagerState,
-                        pageSpacing = 12.dp,
+                HorizontalPager(
+                    state = pagerState,
+                    pageSpacing = 12.dp,
 
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                    ) {
-                        when (it) {
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    when (it) {
 
-                            0 -> {
-                                ImageList(stateImageFlow, viewModel::sendAction)
-                            }
-
-                            1 -> {
-                                VideoList(stateVideoFlow, viewModel::sendAction)
-
-                            }
-
+                        0 -> {
+                            ImageList(stateImageFlow, viewModel::sendAction)
                         }
 
+                        1 -> {
+                            VideoList(stateVideoFlow, viewModel::sendAction)
+                        }
                     }
                 }
             }
         }
-
-
     }
 
 }

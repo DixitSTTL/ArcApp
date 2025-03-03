@@ -1,4 +1,4 @@
-package com.app.myinapp.presentation.main.composable
+package com.app.myinapp.presentation.search.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -22,11 +22,11 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
 import com.app.myinapp.data.model.Photo
-import com.app.myinapp.presentation.main.MainScreenInteract
+import com.app.myinapp.presentation.search.SearchScreenInteract
 import kotlinx.coroutines.Job
 
 @Composable
-fun ImageList(imageList: LazyPagingItems<Photo>, uiAction: (MainScreenInteract) -> Job) {
+fun ImageList(imageList: LazyPagingItems<Photo>, uiAction: (SearchScreenInteract) -> Job) {
 
     LazyVerticalGrid(
         modifier = Modifier
@@ -42,7 +42,7 @@ fun ImageList(imageList: LazyPagingItems<Photo>, uiAction: (MainScreenInteract) 
                     .height(300.dp)
                     .clickable {
                         imageList[index]?.let {
-                            uiAction.invoke(MainScreenInteract.navigateImagePreview(imageList[index]!!))
+                            uiAction.invoke(SearchScreenInteract.navigateImagePreview(imageList[index]!!))
 
                         }
                     }
