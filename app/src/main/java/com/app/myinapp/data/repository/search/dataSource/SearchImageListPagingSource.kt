@@ -3,21 +3,21 @@ package com.app.myinapp.data.repository.search.dataSource
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.app.myinapp.data.model.Photo
+import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.data.network.NetworkClient
 
 class SearchImageListPagingSource(
     private val networkClient: NetworkClient,
-    val searchText: String
-) : PagingSource<Int, Photo>() {
-    override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
+    private val searchText: String
+) : PagingSource<Int, PhotoDTO>() {
+    override fun getRefreshKey(state: PagingState<Int, PhotoDTO>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoDTO> {
         return try {
             val page = params.key ?: 2
             val response = networkClient.getSearchFlowImageList(page = page, query = searchText)

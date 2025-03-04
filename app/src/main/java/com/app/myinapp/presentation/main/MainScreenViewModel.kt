@@ -13,7 +13,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.app.myinapp.data.model.Photo
+import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.data.utils.ResponseResult
 import com.app.myinapp.domain.jobs.MyJobService
 import com.app.myinapp.domain.usecase.UseCaseMainScreen
@@ -30,7 +30,7 @@ class MainScreenViewModel(
 ) : BaseViewModel<MainScreenState, MainScreenInteract>(MainScreenState()) {
 
     init {
-        if (state.value.imageFlowList == emptyFlow<Photo>()) {
+        if (state.value.imageFlowList == emptyFlow<PhotoDTO>()) {
             fetchFlowImage()
             fetchFlowVideo()
 
@@ -77,9 +77,9 @@ class MainScreenViewModel(
 
                 is ResponseResult.Success -> {
 
-                    response.data?.videos?.let {
+                    response.data?.videoDTOS?.let {
                         it
-                        setDataState(state.value.copy(isLoading = false, videoList = it))
+                        setDataState(state.value.copy(isLoading = false, videoDTOList = it))
 
                     }
 
@@ -95,7 +95,7 @@ class MainScreenViewModel(
         viewModelScope.launch {
             setDataState(state.value.copy(isLoading = true))
             val responseFlow = useCaseMainScreen.fetchFlowVideo().cachedIn(viewModelScope)
-            setDataState(state.value.copy(isLoading = false, videoFlowList = responseFlow))
+            setDataState(state.value.copy(isLoading = false, videoDTOFlowList = responseFlow))
         }
     }
 

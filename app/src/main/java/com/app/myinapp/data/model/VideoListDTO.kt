@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class VideoDTO(
+data class VideoListDTO(
     @SerialName("next_page")
     val nextPage: String,
     @SerialName("page")
@@ -18,11 +18,11 @@ data class VideoDTO(
     @SerialName("url")
     val url: String,
     @SerialName("videos")
-    val videos: List<Video>
+    val videoDTOS: List<VideoDTO>
 )
 
 @Serializable
-data class Video(
+data class VideoDTO(
     @SerialName("avg_color")
     val avgColor: String?,
     @SerialName("duration")

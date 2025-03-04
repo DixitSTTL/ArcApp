@@ -21,58 +21,48 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
-import com.app.myinapp.data.model.PhotoDTO
+import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.presentation.search.SearchScreenInteract
 import kotlinx.coroutines.Job
 
-@Composable
-fun ImageList(imageList: LazyPagingItems<PhotoDTO>, uiAction: (SearchScreenInteract) -> Job) {
 
+@Composable
+fun VideoList(videoDTOList: LazyPagingItems<VideoDTO>, uiAction: (SearchScreenInteract) -> Job) {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize(),
-        columns = GridCells.Fixed(3),
+        columns = GridCells.Fixed(2),
     ) {
-        items(imageList.itemCount) { index ->
+        items(videoDTOList.itemCount) { index ->
+
             AsyncImage(
-                model = imageList[index]?.src?.portrait,
+                model = videoDTOList[index]?.image,
                 contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp)
+                    .height(200.dp)
                     .clickable {
-                        imageList[index]?.let {
-                            uiAction.invoke(SearchScreenInteract.navigateImagePreview(imageList[index]!!))
-
-                        }
+                        uiAction.invoke(SearchScreenInteract.navigateVideoPreview(videoDTOList[index]!!))
                     }
                     .padding(2.dp)
                     .clip(RoundedCornerShape(5)),
                 contentScale = ContentScale.Crop
             )
+
         }
-        imageList.apply {
+
+        videoDTOList.apply {
             when {
                 loadState.refresh is LoadState.Loading -> {
                     item { CircularProgressIndicator(color = Color.Black) }
                 }
 
-//                loadState.refresh is LoadState.Error -> {
-//                    val error = moviePagingItems.loadState.refresh as LoadState.Error
-//                    item {
-//                        ErrorMessage(
-//                            modifier = Modifier.fillParentMaxSize(),
-//                            message = error.error.localizedMessage!!,
-//                            onClickRetry = { retry() })
-//                    }
-//                }
-//
                 loadState.append is LoadState.Loading -> {
                     item {
                         Box(
                             Modifier
                                 .fillMaxWidth()
-                                .height(300.dp),
+                                .height(200.dp),
                             contentAlignment = Alignment.Center
                         ) {
 
@@ -83,19 +73,7 @@ fun ImageList(imageList: LazyPagingItems<PhotoDTO>, uiAction: (SearchScreenInter
                         }
                     }
                 }
-//
-//                loadState.append is LoadState.Error -> {
-//                    val error = moviePagingItems.loadState.append as LoadState.Error
-//                    item {
-//                        ErrorMessage(
-//                            modifier = Modifier,
-//                            message = error.error.localizedMessage!!,
-//                            onClickRetry = { retry() })
-//                    }
-//                }
             }
         }
     }
-
-
 }

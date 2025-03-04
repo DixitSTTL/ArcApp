@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ImageDTO(
+data class ImageListDTO(
     @SerialName("next_page")
     val nextPage: String,
     @SerialName("page")
@@ -12,7 +12,7 @@ data class ImageDTO(
     @SerialName("per_page")
     val perPage: Int,
     @SerialName("photos")
-    val photos: List<Photo>,
+    val photos: List<PhotoDTO>,
     @SerialName("prev_page")
     val prevPage: String,
     @SerialName("total_results")
@@ -20,7 +20,7 @@ data class ImageDTO(
 )
 
 @Serializable
-data class Photo(
+data class PhotoDTO(
     @SerialName("alt")
     val alt: String,
     @SerialName("avg_color")

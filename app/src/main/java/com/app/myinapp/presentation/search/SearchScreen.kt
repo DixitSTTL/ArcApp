@@ -1,6 +1,7 @@
 package com.app.myinapp.presentation.search
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,6 +19,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myinapp.presentation.routes
 import com.app.myinapp.presentation.search.composable.AppBar
 import com.app.myinapp.presentation.search.composable.ImageList
+import com.app.myinapp.presentation.search.composable.VideoList
 import com.google.gson.Gson
 import org.koin.androidx.compose.koinViewModel
 
@@ -25,11 +27,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SearchScreen(
     navController: NavHostController,
+    searchType: String,
     viewModel: SearchScreenViewModel = koinViewModel()
 ) {
 
     val state by viewModel.state.collectAsState()
     val stateImageFlow = state.imageFlowList.collectAsLazyPagingItems()
+    val stateVideoFlow = state.videoDTOFlowList.collectAsLazyPagingItems()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -49,7 +53,12 @@ fun SearchScreen(
 
                 is SearchScreenInteract.searchList -> {
                     keyboardController?.hide()
-                    viewModel.fetchFlowSearchImage()
+                    if (searchType=="Images"){
+                        viewModel.fetchFlowSearchImage()
+                    }
+                    else{
+                        viewModel.fetchFlowSearchVideo()
+                    }
                 }
             }
         }
@@ -60,7 +69,10 @@ fun SearchScreen(
     ) { it ->
         Box(Modifier.padding(it)) {
 
+            if (searchType=="Images")
             ImageList(stateImageFlow, viewModel::sendAction)
+            else
+            VideoList(stateVideoFlow,viewModel::sendAction)
         }
     }
 

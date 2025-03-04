@@ -9,7 +9,7 @@ sealed class routes(val route: String) {
     data object MAIN_SCREEN : routes("MAIN_SCREEN")
 
     @Serializable
-    data object SEARCH_SCREEN : routes("SEARCH_SCREEN")
+    data object SEARCH_SCREEN : routes("SEARCH_SCREEN/{Data}")
 
     @Serializable
     data object IMAGE_PREVIEW_SCREEN : routes("IMAGE_PREVIEW_SCREEN/{Photo}")

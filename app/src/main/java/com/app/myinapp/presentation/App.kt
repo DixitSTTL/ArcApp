@@ -10,7 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.app.myinapp.data.model.Photo
+import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.presentation.imagePreview.ImagePreviewScreen
 import com.app.myinapp.presentation.main.MainScreen
 import com.app.myinapp.presentation.search.SearchScreen
@@ -58,11 +58,15 @@ fun App() {
                 MainScreen(navController)
             }
 
-            composable<routes.SEARCH_SCREEN> { backStackEntry ->
+            composable(routes.SEARCH_SCREEN.route,
+                arguments = listOf(navArgument("Data") { type = NavType.StringType })) { backStackEntry ->
+                val dataJson = backStackEntry.arguments?.getString("Data")
+                val data = Gson().fromJson(dataJson, String::class.java) // Decode recipe JSON
+
                 BackHandler {
                     navController.popBackStack()
                 }
-                SearchScreen(navController)
+                SearchScreen(navController,data)
             }
 
             composable(
@@ -75,7 +79,7 @@ fun App() {
 
                 backStackEntry.arguments?.let {
                     val dataJson = backStackEntry.arguments?.getString("Photo")
-                    val data = Gson().fromJson(dataJson, Photo::class.java) // Decode recipe JSON
+                    val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
 
                     data?.let {
                         ImagePreviewScreen(navController, data)

@@ -1,6 +1,7 @@
 package com.app.myinapp.presentation.main
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,7 +50,7 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
     val titles = listOf("Images", "Videos")
     val state by viewModel.state.collectAsState()
     val stateImageFlow = state.imageFlowList.collectAsLazyPagingItems()
-    val stateVideoFlow = state.videoFlowList.collectAsLazyPagingItems()
+    val stateVideoFlow = state.videoDTOFlowList.collectAsLazyPagingItems()
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -63,7 +64,8 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
                 }
 
                 is MainScreenInteract.navigateSearch -> {
-                    navController.navigate(SEARCH_SCREEN)
+                    val data = Uri.encode(Gson().toJson(it.data))
+                    navController.navigate("${SEARCH_SCREEN}/${data}")
                 }
 
                 is MainScreenInteract.navigateVideoPreview -> {
@@ -77,7 +79,9 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
         topBar = {
             AppBar(
                 scrollBehavior,
-                onClick = { viewModel.sendAction(MainScreenInteract.navigateSearch()) },
+                onClick = {
+                    viewModel.sendAction(MainScreenInteract.navigateSearch(titles[pagerState.currentPage]))
+                          },
             )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)

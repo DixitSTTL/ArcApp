@@ -21,28 +21,28 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
-import com.app.myinapp.data.model.Video
+import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.presentation.main.MainScreenInteract
 import kotlinx.coroutines.Job
 
 
 @Composable
-fun VideoList(videoList: LazyPagingItems<Video>, uiAction: (MainScreenInteract) -> Job) {
+fun VideoList(videoDTOList: LazyPagingItems<VideoDTO>, uiAction: (MainScreenInteract) -> Job) {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize(),
         columns = GridCells.Fixed(2),
     ) {
-        items(videoList.itemCount) { index ->
+        items(videoDTOList.itemCount) { index ->
 
             AsyncImage(
-                model = videoList[index]?.image,
+                model = videoDTOList[index]?.image,
                 contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
                     .clickable {
-                        uiAction.invoke(MainScreenInteract.navigateVideoPreview(videoList[index]!!))
+                        uiAction.invoke(MainScreenInteract.navigateVideoPreview(videoDTOList[index]!!))
                     }
                     .padding(2.dp)
                     .clip(RoundedCornerShape(5)),
@@ -51,7 +51,7 @@ fun VideoList(videoList: LazyPagingItems<Video>, uiAction: (MainScreenInteract) 
 
         }
 
-        videoList.apply {
+        videoDTOList.apply {
             when {
                 loadState.refresh is LoadState.Loading -> {
                     item { CircularProgressIndicator(color = Color.Black) }

@@ -1,7 +1,7 @@
 package com.app.myinapp.data.network
 
-import com.app.myinapp.data.model.ImageDTO
-import com.app.myinapp.data.model.VideoDTO
+import com.app.myinapp.data.model.ImageListDTO
+import com.app.myinapp.data.model.VideoListDTO
 import com.app.myinapp.data.network.NetworkConstants.Headers
 import com.app.myinapp.data.utils.ResponseResult
 import io.ktor.client.HttpClient
@@ -11,7 +11,7 @@ import io.ktor.client.request.headers
 
 class NetworkClient(private val client: HttpClient) {
 
-    suspend fun getImageList(): ResponseResult<ImageDTO> {
+    suspend fun getImageList(): ResponseResult<ImageListDTO> {
         try {
 
             val response = client.get(NetworkConstants.curated) {
@@ -24,7 +24,7 @@ class NetworkClient(private val client: HttpClient) {
                 }
             }
             if (response.status.value == 200) {
-                val imageList = response.body<ImageDTO>()
+                val imageList = response.body<ImageListDTO>()
                 println(imageList)
 
                 return ResponseResult.Success(imageList)
@@ -39,7 +39,7 @@ class NetworkClient(private val client: HttpClient) {
     }
 
 
-    suspend fun getVideoList(): ResponseResult<VideoDTO> {
+    suspend fun getVideoList(): ResponseResult<VideoListDTO> {
         try {
 
             val response = client.get(NetworkConstants.video) {
@@ -51,7 +51,7 @@ class NetworkClient(private val client: HttpClient) {
                 }
             }
             if (response.status.value == 200) {
-                val videoList = response.body<VideoDTO>()
+                val videoList = response.body<VideoListDTO>()
                 return ResponseResult.Success(videoList)
 
             } else {
@@ -63,7 +63,7 @@ class NetworkClient(private val client: HttpClient) {
         }
     }
 
-    suspend fun getFlowImageList(page: Int): ImageDTO {
+    suspend fun getFlowImageList(page: Int): ImageListDTO {
 
 
         val response = client.get(NetworkConstants.curated) {
@@ -75,11 +75,11 @@ class NetworkClient(private val client: HttpClient) {
                 appendAll(Headers())
             }
         }
-        return response.body<ImageDTO>()
+        return response.body<ImageListDTO>()
 
     }
 
-    suspend fun getFlowVideoList(page: Int): VideoDTO {
+    suspend fun getFlowVideoList(page: Int): VideoListDTO {
 
 
         val response = client.get(NetworkConstants.video) {
@@ -91,12 +91,12 @@ class NetworkClient(private val client: HttpClient) {
                 appendAll(Headers())
             }
         }
-        return response.body<VideoDTO>()
+        return response.body<VideoListDTO>()
 
     }
 
-    suspend fun getSearchFlowImageList(page: Int, query: String): ImageDTO {
-        val response = client.get(NetworkConstants.search) {
+    suspend fun getSearchFlowImageList(page: Int, query: String): ImageListDTO {
+        val response = client.get(NetworkConstants.searchImage) {
             url {
                 parameters.append("page", "${page}")
                 parameters.append("per_page", "10")
@@ -106,6 +106,20 @@ class NetworkClient(private val client: HttpClient) {
                 appendAll(Headers())
             }
         }
-        return response.body<ImageDTO>()
+        return response.body<ImageListDTO>()
+    }
+
+    suspend fun getSearchFlowVideoList(page: Int, query: String): VideoListDTO {
+        val response = client.get(NetworkConstants.searchVideo) {
+            url {
+                parameters.append("page", "${page}")
+                parameters.append("per_page", "10")
+                parameters.append("query", query)
+            }
+            headers {
+                appendAll(Headers())
+            }
+        }
+        return response.body<VideoListDTO>()
     }
 }

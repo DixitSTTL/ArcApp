@@ -21,12 +21,12 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
-import com.app.myinapp.data.model.Photo
+import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.presentation.main.MainScreenInteract
 import kotlinx.coroutines.Job
 
 @Composable
-fun ImageList(imageList: LazyPagingItems<Photo>, uiAction: (MainScreenInteract) -> Job) {
+fun ImageList(imageList: LazyPagingItems<PhotoDTO>, uiAction: (MainScreenInteract) -> Job) {
 
     LazyVerticalGrid(
         modifier = Modifier

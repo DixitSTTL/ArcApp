@@ -21,11 +21,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.app.myinapp.R
-import com.app.myinapp.data.model.Photo
+import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.presentation.imagePreview.composable.ActionButton
 
 @Composable
-fun ImagePreviewScreen(navController: NavHostController, data: Photo) {
+fun ImagePreviewScreen(navController: NavHostController, data: PhotoDTO) {
 
 
     Scaffold { padding ->
