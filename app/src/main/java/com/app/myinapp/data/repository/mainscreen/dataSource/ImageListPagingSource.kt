@@ -18,7 +18,7 @@ class ImageListPagingSource(private val networkClient: NetworkClient) : PagingSo
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoDTO> {
         return try {
-            val page = params.key ?: 2
+            val page = params.key ?: 1
             val response = networkClient.getFlowImageList(page = page)
             Log.d("TAG", "load: " + response)
 

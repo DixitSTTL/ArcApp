@@ -19,7 +19,7 @@ class SearchImageListPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PhotoDTO> {
         return try {
-            val page = params.key ?: 2
+            val page = params.key ?: 1
             val response = networkClient.getSearchFlowImageList(page = page, query = searchText)
             Log.d("TAG", "load: " + response)
 

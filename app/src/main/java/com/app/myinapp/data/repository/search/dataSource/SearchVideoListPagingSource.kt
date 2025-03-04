@@ -19,7 +19,7 @@ class SearchVideoListPagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, VideoDTO> {
         return try {
-            val page = params.key ?: 2
+            val page = params.key ?: 1
             val response = networkClient.getSearchFlowVideoList(page = page, query = searchText)
             Log.d("TAG", "load: " + response)
 

@@ -13,8 +13,6 @@ data class ImageListDTO(
     val perPage: Int,
     @SerialName("photos")
     val photos: List<PhotoDTO>,
-    @SerialName("prev_page")
-    val prevPage: String,
     @SerialName("total_results")
     val totalResults: Int
 )
