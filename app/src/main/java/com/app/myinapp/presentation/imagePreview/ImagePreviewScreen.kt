@@ -57,6 +57,8 @@ fun ImagePreviewScreen(
                 }
 
                 is ImagePreviewInteract.setWallpaper -> {}
+                is ImagePreviewInteract.downloadWallpaper ->{}
+                is ImagePreviewInteract.dismissDialog -> {}
             }
         }
 

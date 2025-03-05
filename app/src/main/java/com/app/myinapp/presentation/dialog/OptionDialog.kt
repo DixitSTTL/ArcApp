@@ -32,6 +32,12 @@ fun OptionDialog(
                 is ImagePreviewInteract.setWallpaper -> {
                     viewModel.setWallpaper(it.data,it.wallpaperType)
                 }
+                is ImagePreviewInteract.downloadWallpaper -> {
+                    viewModel.downloadWallpaper(it.data)
+                }
+                is ImagePreviewInteract.dismissDialog -> {
+                    navController.popBackStack()
+                }
             }
         }
     }
@@ -39,7 +45,10 @@ fun OptionDialog(
     ModalBottomSheet(sheetState = state, onDismissRequest = { navController.popBackStack() }) {
 
         Column {
-            DialogOptions(icon = R.drawable.ic_download, str = "Download", onClick = {})
+            DialogOptions(
+                icon = R.drawable.ic_download,
+                str = "Download",
+                onClick = {viewModel.sendAction(ImagePreviewInteract.downloadWallpaper(data))})
             DialogOptions(
                 icon = R.drawable.ic_download,
                 str = "Set lock screen",

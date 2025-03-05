@@ -7,5 +7,7 @@ sealed interface ImagePreviewInteract {
     class navigateDialog(var data: PhotoDTO) : ImagePreviewInteract
     class shareImage(var data: PhotoDTO) : ImagePreviewInteract
     class setWallpaper(var data: PhotoDTO, var wallpaperType: WallpaperType) : ImagePreviewInteract
+    class downloadWallpaper(var data: PhotoDTO) : ImagePreviewInteract
+    class dismissDialog() : ImagePreviewInteract
 
 }
