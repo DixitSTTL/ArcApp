@@ -4,6 +4,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -50,86 +52,90 @@ class CustomNavType<T : Parcelable>(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun App() {
     val navController = rememberNavController()
 
     MyInAppTheme {
 
-        NavHost(navController = navController, startDestination = routes.MAIN_SCREEN) {
-            composable<routes.MAIN_SCREEN> { backStackEntry ->
-                MainScreen(navController)
-            }
-
-            composable(
-                routes.SEARCH_SCREEN.route,
-                arguments = listOf(navArgument("Data") { type = NavType.StringType })
-            ) { backStackEntry ->
-                val dataJson = backStackEntry.arguments?.getString("Data")
-                val data = Gson().fromJson(dataJson, String::class.java) // Decode recipe JSON
-
-                BackHandler {
-                    navController.popBackStack()
-                }
-                SearchScreen(navController, data)
-            }
-
-            composable(
-                routes.IMAGE_PREVIEW_SCREEN.route,
-                arguments = listOf(navArgument("Photo") { type = NavType.StringType })
-            ) { backStackEntry ->
-                BackHandler {
-                    navController.popBackStack()
+        SharedTransitionLayout() {
+            NavHost(navController = navController, startDestination = routes.MAIN_SCREEN) {
+                composable<routes.MAIN_SCREEN> { backStackEntry ->
+                    MainScreen(navController, animatedVisibilityScope = this@composable)
                 }
 
-                backStackEntry.arguments?.let {
-                    val dataJson = backStackEntry.arguments?.getString("Photo")
-                    val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
+                composable(
+                    routes.SEARCH_SCREEN.route,
+                    arguments = listOf(navArgument("Data") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val dataJson = backStackEntry.arguments?.getString("Data")
+                    val data = Gson().fromJson(dataJson, String::class.java) // Decode recipe JSON
 
-                    data?.let {
-                        ImagePreviewScreen(navController, data)
+                    BackHandler {
+                        navController.popBackStack()
+                    }
+                    SearchScreen(navController, data, animatedVisibilityScope = this@composable)
+                }
+
+                composable(
+                    routes.IMAGE_PREVIEW_SCREEN.route,
+                    arguments = listOf(navArgument("Photo") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    BackHandler {
+                        navController.popBackStack()
+                    }
+
+                    backStackEntry.arguments?.let {
+                        val dataJson = backStackEntry.arguments?.getString("Photo")
+                        val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
+
+                        data?.let {
+                            ImagePreviewScreen(navController, data, animatedVisibilityScope = this@composable)
+                        }
+
                     }
 
                 }
 
-            }
+                composable(
+                    routes.CORE_IMAGE_PREVIEW_SCREEN.route,
+                    arguments = listOf(navArgument("Photo") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    BackHandler {
+                        navController.popBackStack()
+                    }
+                    backStackEntry.arguments?.let {
+                        val dataJson = backStackEntry.arguments?.getString("Photo")
+                        val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
 
-            composable(
-                routes.CORE_IMAGE_PREVIEW_SCREEN.route,
-                arguments = listOf(navArgument("Photo") { type = NavType.StringType })
-            ) { backStackEntry ->
-                BackHandler {
-                    navController.popBackStack()
+                        data?.let {
+                            CorePreviewScreen(navController, data)
+                        }
+                    }
+
                 }
-                backStackEntry.arguments?.let {
-                    val dataJson = backStackEntry.arguments?.getString("Photo")
-                    val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
 
-                    data?.let {
-                        CorePreviewScreen(navController, data)
+                composable<routes.VIDEO_PREVIEW_SCREEN> { backStackEntry ->
+                    BackHandler {
+                        navController.popBackStack()
+                    }
+                    VideoPreviewScreen(navController)
+                }
+
+                dialog(routes.OPTION_DIALOG.route,
+                    arguments = listOf(navArgument("Photo") { type = NavType.StringType })
+                ) {backStackEntry->
+                    backStackEntry.arguments?.let {
+                        val dataJson = backStackEntry.arguments?.getString("Photo")
+                        val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
+
+                        data?.let {
+                            OptionDialog(navController,data)
+                        }
                     }
                 }
 
-            }
-
-            composable<routes.VIDEO_PREVIEW_SCREEN> { backStackEntry ->
-                BackHandler {
-                    navController.popBackStack()
-                }
-                VideoPreviewScreen(navController)
-            }
-
-            dialog(routes.OPTION_DIALOG.route,
-                arguments = listOf(navArgument("Photo") { type = NavType.StringType })
-            ) {backStackEntry->
-                backStackEntry.arguments?.let {
-                    val dataJson = backStackEntry.arguments?.getString("Photo")
-                    val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
-
-                    data?.let {
-                        OptionDialog(navController,data)
-                    }
-                }
             }
 
         }

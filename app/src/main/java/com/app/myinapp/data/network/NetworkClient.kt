@@ -69,7 +69,7 @@ class NetworkClient(private val client: HttpClient) {
         val response = client.get(NetworkConstants.curated) {
             url {
                 parameters.append("page", "${page}")
-                parameters.append("per_page", "10")
+                parameters.append("per_page", "30")
             }
             headers {
                 appendAll(Headers())
@@ -85,7 +85,7 @@ class NetworkClient(private val client: HttpClient) {
         val response = client.get(NetworkConstants.video) {
             url {
                 parameters.append("page", "${page}")
-                parameters.append("per_page", "10")
+                parameters.append("per_page", "30")
             }
             headers {
                 appendAll(Headers())
@@ -99,7 +99,7 @@ class NetworkClient(private val client: HttpClient) {
         val response = client.get(NetworkConstants.searchImage) {
             url {
                 parameters.append("page", "${page}")
-                parameters.append("per_page", "10")
+                parameters.append("per_page", "30")
                 parameters.append("query", query)
             }
             headers {
@@ -113,7 +113,7 @@ class NetworkClient(private val client: HttpClient) {
         val response = client.get(NetworkConstants.searchVideo) {
             url {
                 parameters.append("page", "${page}")
-                parameters.append("per_page", "10")
+                parameters.append("per_page", "30")
                 parameters.append("query", query)
             }
             headers {

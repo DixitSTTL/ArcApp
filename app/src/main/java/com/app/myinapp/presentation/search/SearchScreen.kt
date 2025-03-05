@@ -1,7 +1,9 @@
 package com.app.myinapp.presentation.search
 
 import android.net.Uri
-import android.util.Log
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,11 +25,12 @@ import com.app.myinapp.presentation.search.composable.VideoList
 import com.google.gson.Gson
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun SearchScreen(
+fun SharedTransitionScope.SearchScreen(
     navController: NavHostController,
     searchType: String,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: SearchScreenViewModel = koinViewModel()
 ) {
 
@@ -70,7 +73,7 @@ fun SearchScreen(
         Box(Modifier.padding(it)) {
 
             if (searchType=="Images")
-            ImageList(stateImageFlow, viewModel::sendAction)
+            ImageList(stateImageFlow, viewModel::sendAction,animatedVisibilityScope)
             else
             VideoList(stateVideoFlow,viewModel::sendAction)
         }

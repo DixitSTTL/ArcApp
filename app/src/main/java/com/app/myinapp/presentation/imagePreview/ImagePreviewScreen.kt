@@ -1,6 +1,9 @@
 package com.app.myinapp.presentation.imagePreview
 
 import android.net.Uri
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -17,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -28,14 +30,15 @@ import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.presentation.imagePreview.composable.ActionButton
 import com.app.myinapp.presentation.routes.CORE_IMAGE_PREVIEW_SCREEN
 import com.app.myinapp.presentation.routes.OPTION_DIALOG
-
 import com.google.gson.Gson
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun ImagePreviewScreen(
+fun SharedTransitionScope.ImagePreviewScreen(
     navController: NavHostController,
     data: PhotoDTO,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: ImagePreviewViewModel = koinViewModel()
 ) {
 
@@ -57,7 +60,7 @@ fun ImagePreviewScreen(
                 }
 
                 is ImagePreviewInteract.setWallpaper -> {}
-                is ImagePreviewInteract.downloadWallpaper ->{}
+                is ImagePreviewInteract.downloadWallpaper -> {}
                 is ImagePreviewInteract.dismissDialog -> {}
             }
         }
@@ -71,15 +74,26 @@ fun ImagePreviewScreen(
                     modifier = Modifier
                         .weight(1f)
                 ) {
-                    AsyncImage(
-                        model = data.src.portrait,
-                        contentDescription = "",
+                    Card(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(10.dp)
-                            .clip(RoundedCornerShape(5)),
-                        contentScale = ContentScale.Crop
-                    )
+                            .sharedElement(
+                                rememberSharedContentState(key = "${data.id}"),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                zIndexInOverlay = 2F,
+                            )
+                    ) {
+
+                        AsyncImage(
+                            model = data.src.portrait,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
                     IconButton(
                         onClick = {
                             viewModel.sendAction(ImagePreviewInteract.navigateCoreImagePreview(data))

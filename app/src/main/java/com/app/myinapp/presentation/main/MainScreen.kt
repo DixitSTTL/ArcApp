@@ -1,7 +1,9 @@
 package com.app.myinapp.presentation.main
 
 import android.net.Uri
-import android.util.Log
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,9 +44,9 @@ import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel = koinViewModel()) {
+fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedVisibilityScope: AnimatedVisibilityScope, viewModel: MainScreenViewModel = koinViewModel()) {
 
     val pagerState = rememberPagerState(pageCount = { 2 })
     val titles = listOf("Images", "Videos")
@@ -153,7 +155,7 @@ fun MainScreen(navController: NavHostController, viewModel: MainScreenViewModel 
                     when (it) {
 
                         0 -> {
-                            ImageList(stateImageFlow, viewModel::sendAction)
+                            ImageList(stateImageFlow, viewModel::sendAction,animatedVisibilityScope)
                         }
 
                         1 -> {

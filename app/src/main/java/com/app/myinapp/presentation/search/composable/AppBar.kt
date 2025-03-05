@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -45,8 +45,10 @@ fun AppBar(
                 placeholder = {
                     Text(
                         "Enter query", style = TextStyle(
-                            fontStyle = FontStyle.Italic
-                        )
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 16.sp,
+
+                            )
                     )
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -54,7 +56,7 @@ fun AppBar(
                     keyboardType = KeyboardType.Text
                 ),
                 singleLine = true,
-                shape = RoundedCornerShape(20.dp),
+                shape = RoundedCornerShape(50.dp),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
@@ -64,7 +66,7 @@ fun AppBar(
                 }),
                 textStyle = TextStyle(
                     fontSize = 16.sp,
-                    fontStyle = FontStyle.Italic
+                    fontWeight = FontWeight.SemiBold,
                 ),
             )
         },
