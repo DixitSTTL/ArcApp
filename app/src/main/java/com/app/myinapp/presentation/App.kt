@@ -7,6 +7,8 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -55,14 +57,20 @@ class CustomNavType<T : Parcelable>(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun App() {
+    val dynamic = remember { mutableStateOf(false) }
     val navController = rememberNavController()
 
-    MyInAppTheme {
+    MyInAppTheme(dynamicColor = dynamic.value) {
 
         SharedTransitionLayout() {
             NavHost(navController = navController, startDestination = routes.MAIN_SCREEN) {
                 composable<routes.MAIN_SCREEN> { backStackEntry ->
-                    MainScreen(navController, animatedVisibilityScope = this@composable)
+                    MainScreen(
+                        navController,
+                        animatedVisibilityScope = this@composable,
+                        onSwitchStateChange = { status ->
+                            dynamic.value = status
+                        },dynamic=dynamic.value)
                 }
 
                 composable(
@@ -88,10 +96,15 @@ fun App() {
 
                     backStackEntry.arguments?.let {
                         val dataJson = backStackEntry.arguments?.getString("Photo")
-                        val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
+                        val data =
+                            Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
 
                         data?.let {
-                            ImagePreviewScreen(navController, data, animatedVisibilityScope = this@composable)
+                            ImagePreviewScreen(
+                                navController,
+                                data,
+                                animatedVisibilityScope = this@composable
+                            )
                         }
 
                     }
@@ -107,7 +120,8 @@ fun App() {
                     }
                     backStackEntry.arguments?.let {
                         val dataJson = backStackEntry.arguments?.getString("Photo")
-                        val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
+                        val data =
+                            Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
 
                         data?.let {
                             CorePreviewScreen(navController, data)
@@ -123,15 +137,17 @@ fun App() {
                     VideoPreviewScreen(navController)
                 }
 
-                dialog(routes.OPTION_DIALOG.route,
+                dialog(
+                    routes.OPTION_DIALOG.route,
                     arguments = listOf(navArgument("Photo") { type = NavType.StringType })
-                ) {backStackEntry->
+                ) { backStackEntry ->
                     backStackEntry.arguments?.let {
                         val dataJson = backStackEntry.arguments?.getString("Photo")
-                        val data = Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
+                        val data =
+                            Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
 
                         data?.let {
-                            OptionDialog(navController,data)
+                            OptionDialog(navController, data)
                         }
                     }
                 }

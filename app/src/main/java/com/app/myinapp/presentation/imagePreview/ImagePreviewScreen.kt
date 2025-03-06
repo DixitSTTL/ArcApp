@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +32,7 @@ import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.presentation.imagePreview.composable.ActionButton
 import com.app.myinapp.presentation.routes.CORE_IMAGE_PREVIEW_SCREEN
 import com.app.myinapp.presentation.routes.OPTION_DIALOG
+import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.gson.Gson
 import org.koin.androidx.compose.koinViewModel
 
@@ -68,10 +71,11 @@ fun SharedTransitionScope.ImagePreviewScreen(
     }
 
     Scaffold { padding ->
-        Box(Modifier.padding(padding)) {
+        Box(Modifier.background(color = Theme.colors.background)) {
             Column {
                 Box(
                     modifier = Modifier
+                        .padding(padding)
                         .weight(1f)
                 ) {
                     Card(
@@ -99,15 +103,19 @@ fun SharedTransitionScope.ImagePreviewScreen(
                             viewModel.sendAction(ImagePreviewInteract.navigateCoreImagePreview(data))
                         },
                         modifier = Modifier
-                            .padding(25.dp)
-                            .size(22.dp)
+                            .padding(22.dp)
+                            .size(28.dp)
                             .align(
                                 Alignment.BottomEnd
-                            )
+                            ),
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = Theme.colors.primaryContainer
+                        )
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.ic_preview),
                             contentDescription = "",
+                            tint = Theme.colors.onPrimaryContainer,
                         )
                     }
 

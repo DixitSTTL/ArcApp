@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,7 @@ import com.app.myinapp.presentation.routes
 import com.app.myinapp.presentation.search.composable.AppBar
 import com.app.myinapp.presentation.search.composable.ImageList
 import com.app.myinapp.presentation.search.composable.VideoList
+import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.gson.Gson
 import org.koin.androidx.compose.koinViewModel
 
@@ -70,7 +72,7 @@ fun SharedTransitionScope.SearchScreen(
     Scaffold(
         topBar = { AppBar(scrollBehavior, state, viewModel::sendAction, viewModel::setDataState) }
     ) { it ->
-        Box(Modifier.padding(it)) {
+        Box(Modifier.padding(it).background(color = Theme.colors.background)) {
 
             if (searchType=="Images")
             ImageList(stateImageFlow, viewModel::sendAction,animatedVisibilityScope)

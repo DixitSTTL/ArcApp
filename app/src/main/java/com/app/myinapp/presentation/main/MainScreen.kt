@@ -18,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,13 +41,14 @@ import com.app.myinapp.presentation.main.composable.VideoList
 import com.app.myinapp.presentation.routes.IMAGE_PREVIEW_SCREEN
 import com.app.myinapp.presentation.routes.SEARCH_SCREEN
 import com.app.myinapp.presentation.routes.VIDEO_PREVIEW_SCREEN
+import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedVisibilityScope: AnimatedVisibilityScope, viewModel: MainScreenViewModel = koinViewModel()) {
+fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedVisibilityScope: AnimatedVisibilityScope, onSwitchStateChange: (Boolean) -> Unit,dynamic:Boolean, viewModel: MainScreenViewModel = koinViewModel()) {
 
     val pagerState = rememberPagerState(pageCount = { 2 })
     val titles = listOf("Images", "Videos")
@@ -83,18 +85,18 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                 scrollBehavior,
                 onClick = {
                     viewModel.sendAction(MainScreenInteract.navigateSearch(titles[pagerState.currentPage]))
-                          },
+                },
+                onSwitchStateChange = {bool->onSwitchStateChange(bool)},
+                dynamic=dynamic
             )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
+        Box(modifier = Modifier.padding(innerPadding).background(color = Theme.colors.background)) {
 
             Column(
                 modifier = Modifier
-
                     .fillMaxSize()
-                    .background(Color.White)
             ) {
                 TabRow(
                     selectedTabIndex = pagerState.currentPage,
@@ -104,7 +106,7 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                     modifier = Modifier
                         .fillMaxWidth(),
                     indicator = {
-                        TabRowDefaults.Indicator(
+                        SecondaryIndicator(
                             modifier = Modifier
                                 .clip(
                                     shape = RoundedCornerShape(
@@ -113,11 +115,11 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                                     )
                                 )
                                 .tabIndicatorOffset(it[pagerState.currentPage]),
-                            color = Color.Cyan,
-                            height = 3.dp
+                            height = 3.dp,
+                            color = Theme.colors.secondary
                         )
                     },
-                    containerColor = Color.Transparent,
+                    containerColor = Theme.colors.onSecondary,
                     contentColor = Color.Black,
                 ) {
 
@@ -126,7 +128,7 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                             text = {
                                 Text(
                                     text = title,
-                                    color = Color.Black,
+                                    color = Theme.colors.secondary,
                                     /*  style = TextStyle(
                                       fontFamily = FontFamily(Font(R.font.alegreya_bold)),
                                       fontSize = 16.sp

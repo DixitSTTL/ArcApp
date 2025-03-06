@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.app.myinapp.presentation.ui.theme.Theme
 
 
 @Composable
@@ -23,14 +23,15 @@ fun ActionButton(onclick: () -> Unit, icon: Int) {
             .size(60.dp)
             .clip(RoundedCornerShape(50))
             .clickable { onclick() }
-            .background(Color.Gray)
+            .background(Theme.colors.onPrimaryContainer)
     ) {
         Icon(
             painter = painterResource(icon),
             contentDescription = "",
             modifier = Modifier
                 .size(22.dp)
-                .align(Alignment.Center)
+                .align(Alignment.Center),
+            tint = Theme.colors.primaryContainer
         )
     }
 

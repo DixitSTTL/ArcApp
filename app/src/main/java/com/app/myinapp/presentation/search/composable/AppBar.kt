@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.app.myinapp.R
 import com.app.myinapp.presentation.search.SearchScreenInteract
 import com.app.myinapp.presentation.search.SearchScreenState
+import com.app.myinapp.presentation.ui.theme.Theme
 import kotlinx.coroutines.Job
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +50,8 @@ fun AppBar(
                             fontWeight = FontWeight.Normal,
                             fontSize = 16.sp,
 
-                            )
+                            ),
+                        color = Theme.colors.primaryContainer
                     )
                 },
                 keyboardOptions = KeyboardOptions.Default.copy(
@@ -59,7 +62,12 @@ fun AppBar(
                 shape = RoundedCornerShape(50.dp),
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedTextColor = Theme.colors.primaryContainer,
+                    unfocusedTextColor = Theme.colors.primaryContainer,
+                    focusedContainerColor = Theme.colors.onPrimaryContainer,
+                    unfocusedContainerColor = Theme.colors.onPrimaryContainer,
+                    cursorColor = Theme.colors.secondary,
                 ),
                 keyboardActions = KeyboardActions(onDone = {
                     uiAction(SearchScreenInteract.searchList())
@@ -68,13 +76,17 @@ fun AppBar(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
                 ),
+
             )
         },
         scrollBehavior = scrollBehavior,
         actions = {
             IconButton(onClick = { uiAction(SearchScreenInteract.searchList()) }) {
-                Icon(painterResource(R.drawable.ic_search), "")
+                Icon(painterResource(R.drawable.ic_search), "", tint = Theme.colors.onPrimaryContainer)
             }
-        })
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Theme.colors.primaryContainer
+        ))
 
 }

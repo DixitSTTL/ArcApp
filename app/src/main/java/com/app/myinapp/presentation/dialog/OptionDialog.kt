@@ -13,6 +13,7 @@ import com.app.myinapp.presentation.dialog.composable.DialogOptions
 import com.app.myinapp.presentation.imagePreview.ImagePreviewInteract
 import com.app.myinapp.presentation.imagePreview.ImagePreviewViewModel
 import com.app.myinapp.presentation.imagePreview.WallpaperType
+import com.app.myinapp.presentation.ui.theme.Theme
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,11 +31,13 @@ fun OptionDialog(
                 is ImagePreviewInteract.navigateDialog -> {}
                 is ImagePreviewInteract.shareImage -> {}
                 is ImagePreviewInteract.setWallpaper -> {
-                    viewModel.setWallpaper(it.data,it.wallpaperType)
+                    viewModel.setWallpaper(it.data, it.wallpaperType)
                 }
+
                 is ImagePreviewInteract.downloadWallpaper -> {
                     viewModel.downloadWallpaper(it.data)
                 }
+
                 is ImagePreviewInteract.dismissDialog -> {
                     navController.popBackStack()
                 }
@@ -42,21 +45,40 @@ fun OptionDialog(
         }
     }
 
-    ModalBottomSheet(sheetState = state, onDismissRequest = { navController.popBackStack() }) {
+    ModalBottomSheet(
+        sheetState = state,
+        onDismissRequest = { navController.popBackStack() },
+        containerColor = Theme.colors.primaryContainer,
+        dragHandle = {}
+    ) {
 
         Column {
             DialogOptions(
                 icon = R.drawable.ic_download,
                 str = "Download",
-                onClick = {viewModel.sendAction(ImagePreviewInteract.downloadWallpaper(data))})
+                onClick = { viewModel.sendAction(ImagePreviewInteract.downloadWallpaper(data)) })
             DialogOptions(
                 icon = R.drawable.ic_download,
                 str = "Set lock screen",
-                onClick = { viewModel.sendAction(ImagePreviewInteract.setWallpaper(data,WallpaperType.LOCKSCREEN)) })
+                onClick = {
+                    viewModel.sendAction(
+                        ImagePreviewInteract.setWallpaper(
+                            data,
+                            WallpaperType.LOCKSCREEN
+                        )
+                    )
+                })
             DialogOptions(
                 icon = R.drawable.ic_download,
                 str = "Set Dashboard",
-                onClick = { viewModel.sendAction(ImagePreviewInteract.setWallpaper(data,WallpaperType.DASHBOARDSCREEN)) })
+                onClick = {
+                    viewModel.sendAction(
+                        ImagePreviewInteract.setWallpaper(
+                            data,
+                            WallpaperType.DASHBOARDSCREEN
+                        )
+                    )
+                })
 
         }
 
