@@ -99,4 +99,7 @@ dependencies {
     //workManager
     implementation(libs.androidx.work.runtime.ktx)
 
+    //exoplayer
+    implementation(libs.androidx.media3.exoplayer)
+
 }

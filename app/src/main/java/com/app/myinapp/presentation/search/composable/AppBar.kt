@@ -3,6 +3,8 @@ package com.app.myinapp.presentation.search.composable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,6 +34,7 @@ import kotlinx.coroutines.Job
 fun AppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     state: SearchScreenState,
+    onBackPress: () -> Unit,
     uiAction: (SearchScreenInteract) -> Job,
     stateUpdate: (SearchScreenState) -> Unit,
 ) {
@@ -80,6 +83,15 @@ fun AppBar(
             )
         },
         scrollBehavior = scrollBehavior,
+        navigationIcon = {
+            IconButton(onClick = {onBackPress()}) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "",
+                    tint = Theme.colors.onPrimaryContainer
+                )
+            }
+        },
         actions = {
             IconButton(onClick = { uiAction(SearchScreenInteract.searchList()) }) {
                 Icon(painterResource(R.drawable.ic_search), "", tint = Theme.colors.onPrimaryContainer)

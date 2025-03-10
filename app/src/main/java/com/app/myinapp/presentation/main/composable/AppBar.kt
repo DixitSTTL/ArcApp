@@ -18,9 +18,8 @@ import com.app.myinapp.presentation.ui.theme.Theme
 @Composable
 fun AppBar(
     scrollBehavior: TopAppBarScrollBehavior,
-    onSwitchStateChange: (Boolean) -> Unit,
-    onClick: () -> Unit,
-    dynamic: Boolean
+    navigateSearch: () -> Unit,
+    navigateSetting: () -> Unit,
 ) {
 
     LargeTopAppBar(
@@ -29,19 +28,18 @@ fun AppBar(
         },
         scrollBehavior = scrollBehavior,
         actions = {
-            Switch(
-                checked = dynamic,
-                colors = SwitchDefaults.colors(
-                    checkedTrackColor = Theme.colors.onPrimaryContainer,
-                    checkedThumbColor = Theme.colors.primaryContainer,
-                ),
-                onCheckedChange = { status ->
-                    onSwitchStateChange(status)
-                })
 
-            IconButton(onClick = { onClick() }) {
+            IconButton(onClick = { navigateSearch() }) {
                 Icon(
                     painterResource(R.drawable.ic_search),
+                    "",
+                    tint = Theme.colors.onPrimaryContainer
+                )
+            }
+
+            IconButton(onClick = { navigateSetting() }) {
+                Icon(
+                    painterResource(R.drawable.ic_setting),
                     "",
                     tint = Theme.colors.onPrimaryContainer
                 )

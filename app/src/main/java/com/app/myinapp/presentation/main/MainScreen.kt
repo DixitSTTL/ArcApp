@@ -17,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
@@ -38,6 +37,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myinapp.presentation.main.composable.AppBar
 import com.app.myinapp.presentation.main.composable.ImageList
 import com.app.myinapp.presentation.main.composable.VideoList
+import com.app.myinapp.presentation.routes
 import com.app.myinapp.presentation.routes.IMAGE_PREVIEW_SCREEN
 import com.app.myinapp.presentation.routes.SEARCH_SCREEN
 import com.app.myinapp.presentation.routes.VIDEO_PREVIEW_SCREEN
@@ -48,7 +48,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedVisibilityScope: AnimatedVisibilityScope, onSwitchStateChange: (Boolean) -> Unit,dynamic:Boolean, viewModel: MainScreenViewModel = koinViewModel()) {
+fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedVisibilityScope: AnimatedVisibilityScope, viewModel: MainScreenViewModel = koinViewModel()) {
 
     val pagerState = rememberPagerState(pageCount = { 2 })
     val titles = listOf("Images", "Videos")
@@ -73,7 +73,12 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                 }
 
                 is MainScreenInteract.navigateVideoPreview -> {
-                    navController.navigate(VIDEO_PREVIEW_SCREEN) { launchSingleTop = true }
+                    val data = Uri.encode(Gson().toJson(it.data))
+                    navController.navigate("${VIDEO_PREVIEW_SCREEN}/${data}")
+                }
+
+                is MainScreenInteract.navigateSetting -> {
+                    navController.navigate(routes.SETTING_SCREEN) { launchSingleTop = true }
                 }
             }
         }
@@ -83,16 +88,19 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
         topBar = {
             AppBar(
                 scrollBehavior,
-                onClick = {
+                navigateSearch = {
                     viewModel.sendAction(MainScreenInteract.navigateSearch(titles[pagerState.currentPage]))
                 },
-                onSwitchStateChange = {bool->onSwitchStateChange(bool)},
-                dynamic=dynamic
+                navigateSetting = {
+                    viewModel.sendAction(MainScreenInteract.navigateSetting())
+                }
             )
         },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding).background(color = Theme.colors.background)) {
+        Box(modifier = Modifier
+            .padding(innerPadding)
+            .background(color = Theme.colors.background)) {
 
             Column(
                 modifier = Modifier

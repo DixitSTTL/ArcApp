@@ -6,6 +6,7 @@ import com.app.myinapp.data.model.VideoDTO
 sealed interface MainScreenInteract {
     class navigateImagePreview(var data: PhotoDTO) : MainScreenInteract
     class navigateSearch(var data: String) : MainScreenInteract
-    class navigateVideoPreview(var videoDTO: VideoDTO) : MainScreenInteract
+    class navigateVideoPreview(var data: VideoDTO) : MainScreenInteract
+    class navigateSetting() : MainScreenInteract
 
 }

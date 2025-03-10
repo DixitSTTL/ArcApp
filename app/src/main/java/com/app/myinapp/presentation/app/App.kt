@@ -1,4 +1,4 @@
-package com.app.myinapp.presentation
+package com.app.myinapp.presentation.app
 
 import android.os.Build
 import android.os.Bundle
@@ -7,8 +7,8 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,16 +16,20 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.app.myinapp.data.model.PhotoDTO
+import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.presentation.coreImagePreview.CorePreviewScreen
 import com.app.myinapp.presentation.dialog.OptionDialog
 import com.app.myinapp.presentation.imagePreview.ImagePreviewScreen
 import com.app.myinapp.presentation.main.MainScreen
+import com.app.myinapp.presentation.routes
 import com.app.myinapp.presentation.search.SearchScreen
+import com.app.myinapp.presentation.setting.SettingScreen
 import com.app.myinapp.presentation.ui.theme.MyInAppTheme
 import com.app.myinapp.presentation.videoPreview.VideoPreviewScreen
 import com.google.gson.Gson
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import org.koin.androidx.compose.koinViewModel
 import kotlin.reflect.KClass
 
 
@@ -56,21 +60,19 @@ class CustomNavType<T : Parcelable>(
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun App() {
-    val dynamic = remember { mutableStateOf(false) }
+fun App(viewModel:AppViewModel = koinViewModel()) {
+
+    val state by viewModel.state.collectAsState()
     val navController = rememberNavController()
 
-    MyInAppTheme(dynamicColor = dynamic.value) {
+    MyInAppTheme(dynamicColor = state.isDynamicUi, darkTheme = state.isDarkMode) {
 
         SharedTransitionLayout() {
             NavHost(navController = navController, startDestination = routes.MAIN_SCREEN) {
                 composable<routes.MAIN_SCREEN> { backStackEntry ->
                     MainScreen(
                         navController,
-                        animatedVisibilityScope = this@composable,
-                        onSwitchStateChange = { status ->
-                            dynamic.value = status
-                        },dynamic=dynamic.value)
+                        animatedVisibilityScope = this@composable)
                 }
 
                 composable(
@@ -130,11 +132,28 @@ fun App() {
 
                 }
 
-                composable<routes.VIDEO_PREVIEW_SCREEN> { backStackEntry ->
+                composable(routes.VIDEO_PREVIEW_SCREEN.route,
+                    arguments = listOf(navArgument("Video") { type = NavType.StringType })) { backStackEntry ->
                     BackHandler {
                         navController.popBackStack()
                     }
-                    VideoPreviewScreen(navController)
+                    backStackEntry.arguments?.let {
+                        val dataJson = backStackEntry.arguments?.getString("Video")
+                        val data =
+                            Gson().fromJson(dataJson, VideoDTO::class.java) // Decode recipe JSON
+
+                        data?.let {
+                            VideoPreviewScreen(navController, data)
+
+                        }
+                    }
+                }
+
+                composable<routes.SETTING_SCREEN> { backStackEntry ->
+                    BackHandler {
+                        navController.popBackStack()
+                    }
+                    SettingScreen(navController)
                 }
 
                 dialog(

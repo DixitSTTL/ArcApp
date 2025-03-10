@@ -58,10 +58,9 @@ fun SharedTransitionScope.SearchScreen(
 
                 is SearchScreenInteract.searchList -> {
                     keyboardController?.hide()
-                    if (searchType=="Images"){
+                    if (searchType == "Images") {
                         viewModel.fetchFlowSearchImage()
-                    }
-                    else{
+                    } else {
                         viewModel.fetchFlowSearchVideo()
                     }
                 }
@@ -70,14 +69,24 @@ fun SharedTransitionScope.SearchScreen(
     }
 
     Scaffold(
-        topBar = { AppBar(scrollBehavior, state, viewModel::sendAction, viewModel::setDataState) }
+        topBar = {
+            AppBar(
+                scrollBehavior,
+                state,
+                { navController.popBackStack() },
+                viewModel::sendAction,
+                viewModel::setDataState
+            )
+        }
     ) { it ->
-        Box(Modifier.padding(it).background(color = Theme.colors.background)) {
+        Box(Modifier
+            .padding(it)
+            .background(color = Theme.colors.background)) {
 
-            if (searchType=="Images")
-            ImageList(stateImageFlow, viewModel::sendAction,animatedVisibilityScope)
+            if (searchType == "Images")
+                ImageList(stateImageFlow, viewModel::sendAction, animatedVisibilityScope)
             else
-            VideoList(stateVideoFlow,viewModel::sendAction)
+                VideoList(stateVideoFlow, viewModel::sendAction)
         }
     }
 
