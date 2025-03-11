@@ -1,9 +1,8 @@
-package com.app.myinapp.presentation.main.composable
+package com.app.myinapp.presentation.common
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -24,14 +24,12 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
 import com.app.myinapp.data.model.PhotoDTO
-import com.app.myinapp.presentation.main.MainScreenInteract
-import kotlinx.coroutines.Job
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.ImageList(
     imageList: LazyPagingItems<PhotoDTO>,
-    uiAction: (MainScreenInteract) -> Job,
+    onClick: (PhotoDTO) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
@@ -40,20 +38,20 @@ fun SharedTransitionScope.ImageList(
             .fillMaxSize(),
         columns = GridCells.Fixed(3),
     ) {
-        items(imageList.itemCount) { index ->
+        itemsIndexed(imageList.itemSnapshotList.items) { index, item ->
             Card (
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
                     .padding(4.dp)
                     .sharedElement(
-                        rememberSharedContentState(key = "${imageList[index]!!.id}"),
+                        rememberSharedContentState(key = "${item.id}"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         zIndexInOverlay = 2F,
                     ),
                 onClick = {
                     imageList[index]?.let {
-                        uiAction.invoke(MainScreenInteract.navigateImagePreview(imageList[index]!!))
+                        onClick(item)
 
                     }
                 }

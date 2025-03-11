@@ -9,20 +9,24 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myinapp.presentation.routes
 import com.app.myinapp.presentation.search.composable.AppBar
-import com.app.myinapp.presentation.search.composable.ImageList
-import com.app.myinapp.presentation.search.composable.VideoList
+import com.app.myinapp.presentation.common.ImageList
+import com.app.myinapp.presentation.common.VideoList
+import com.app.myinapp.presentation.routes.VIDEO_PREVIEW_SCREEN
 import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.gson.Gson
 import org.koin.androidx.compose.koinViewModel
@@ -43,6 +47,7 @@ fun SharedTransitionScope.SearchScreen(
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
 
+    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.uiAction.collect {
@@ -53,15 +58,21 @@ fun SharedTransitionScope.SearchScreen(
                 }
 
                 is SearchScreenInteract.navigateVideoPreview -> {
-                    navController.navigate(routes.IMAGE_PREVIEW_SCREEN)
+                    val data = Uri.encode(Gson().toJson(it.data))
+                    navController.navigate("$VIDEO_PREVIEW_SCREEN/${data}")
                 }
 
                 is SearchScreenInteract.searchList -> {
                     keyboardController?.hide()
-                    if (searchType == "Images") {
-                        viewModel.fetchFlowSearchImage()
-                    } else {
-                        viewModel.fetchFlowSearchVideo()
+                    if (state.query.isNotEmpty()){
+                            if (searchType == "Images") {
+                                viewModel.fetchFlowSearchImage()
+                            } else {
+                                viewModel.fetchFlowSearchVideo()
+                            }
+                    }
+                    else{
+                        snackBarHostState.showSnackbar("Please enter some text")
                     }
                 }
             }
@@ -77,16 +88,22 @@ fun SharedTransitionScope.SearchScreen(
                 viewModel::sendAction,
                 viewModel::setDataState
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
+
     ) { it ->
         Box(Modifier
             .padding(it)
             .background(color = Theme.colors.background)) {
 
             if (searchType == "Images")
-                ImageList(stateImageFlow, viewModel::sendAction, animatedVisibilityScope)
+                ImageList(stateImageFlow, onClick = {it
+                    viewModel.sendAction(SearchScreenInteract.navigateImagePreview(it))
+                }, animatedVisibilityScope)
             else
-                VideoList(stateVideoFlow, viewModel::sendAction)
+                VideoList(stateVideoFlow,{it
+                    viewModel.sendAction(SearchScreenInteract.navigateVideoPreview(it))
+                })
         }
     }
 

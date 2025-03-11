@@ -14,13 +14,11 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.app.myinapp.data.model.PhotoDTO
-import com.app.myinapp.data.utils.ResponseResult
 import com.app.myinapp.domain.jobs.MyJobService
 import com.app.myinapp.domain.usecase.UseCaseMainScreen
 import com.app.myinapp.domain.workmanager.FirstWorker
 import com.app.myinapp.domain.workmanager.SecondWorker
 import com.app.myinapp.presentation.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -37,63 +35,8 @@ class MainScreenViewModel(
 
         }
     }
-
-    fun fetchImage() {
-        viewModelScope.launch {
-            setDataState(state.value.copy(isLoading = true))
-            val response = useCaseMainScreen.fetchImage()
-
-            when (response) {
-                is ResponseResult.Error -> {
-                    Log.d("Error", response.message)
-                    setDataState(state.value.copy(isLoading = false))
-
-                }
-
-                is ResponseResult.Success -> {
-
-                    response.data?.photos?.let {
-                        it
-                        setDataState(state.value.copy(isLoading = false, imageList = it))
-
-
-                    }
-                }
-            }
-        }
-
-    }
-
-    fun fetchVideo() {
-        viewModelScope.launch {
-
-            val response = useCaseMainScreen.fetchVideo()
-
-            when (response) {
-                is ResponseResult.Error -> {
-                    Log.d("Error", response.message)
-                    setDataState(state.value.copy(isLoading = false))
-
-                }
-
-                is ResponseResult.Success -> {
-
-                    response.data?.videoDTOS?.let {
-                        it
-                        setDataState(state.value.copy(isLoading = false, videoDTOList = it))
-
-                    }
-
-                }
-
-
-            }
-        }
-
-    }
-
     private fun fetchFlowVideo() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             setDataState(state.value.copy(isLoading = true))
             val responseFlow = useCaseMainScreen.fetchFlowVideo().cachedIn(viewModelScope)
             setDataState(state.value.copy(isLoading = false, videoDTOFlowList = responseFlow))
@@ -101,10 +44,11 @@ class MainScreenViewModel(
     }
 
     private fun fetchFlowImage() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             setDataState(state.value.copy(isLoading = true))
             val responseFlow = useCaseMainScreen.fetchFlowImage().cachedIn(viewModelScope)
             setDataState(state.value.copy(isLoading = false, imageFlowList = responseFlow))
+
         }
     }
 
