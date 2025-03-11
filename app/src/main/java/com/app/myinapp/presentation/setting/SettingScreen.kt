@@ -71,7 +71,8 @@ fun SettingScreen(
                     Text(
                         "Dynamic Theme",
                         color = Theme.colors.secondary,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        style = Theme.typography.body
                     )
                     Switch(
                         checked = state.isDynamicUi,
@@ -93,7 +94,8 @@ fun SettingScreen(
                     Text(
                         "Dark mode",
                         color = Theme.colors.secondary,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
+                        style = Theme.typography.body
 
                     )
                     Switch(

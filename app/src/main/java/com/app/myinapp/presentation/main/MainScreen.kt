@@ -137,10 +137,7 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                                 Text(
                                     text = title,
                                     color = Theme.colors.secondary,
-                                    /*  style = TextStyle(
-                                      fontFamily = FontFamily(Font(R.font.alegreya_bold)),
-                                      fontSize = 16.sp
-                                  )*/
+                                      style = Theme.typography.titleMedium
                                 )
 
                             },

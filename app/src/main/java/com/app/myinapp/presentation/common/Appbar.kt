@@ -16,7 +16,7 @@ import com.app.myinapp.presentation.ui.theme.Theme
 fun AppBar(onBackPress:()->Unit,title: String) {
 
     CenterAlignedTopAppBar(
-        title = { Text(title, color = Theme.colors.onPrimaryContainer) },
+        title = { Text(title, color = Theme.colors.onPrimaryContainer, style = Theme.typography.headline) },
         navigationIcon = {
             IconButton(onClick = {onBackPress()}) {
                 Icon(

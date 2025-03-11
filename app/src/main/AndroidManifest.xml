@@ -10,9 +10,9 @@
         android:name=".MyApplication"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_main_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_main_logo_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.MyInApp"
@@ -22,7 +22,7 @@
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MyInApp">
+            android:theme="@style/splashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

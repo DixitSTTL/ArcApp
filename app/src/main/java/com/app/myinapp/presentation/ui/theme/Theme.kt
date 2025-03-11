@@ -3,7 +3,6 @@ package com.app.myinapp.presentation.ui.theme
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -14,7 +13,6 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 
 data class Colors(
     val black: Color,
@@ -197,10 +195,10 @@ object Theme {
         @ReadOnlyComposable
         get() = localColorScheme.current
 
-//    val typography: kotlin.text.Typography
-//        @Composable
-//        @ReadOnlyComposable
-//        get() = localTypography.current
+    val typography: Typography
+        @Composable
+        @ReadOnlyComposable
+        get() = localTypography.current
 
     val radius: Radius
         @Composable
@@ -216,7 +214,7 @@ object Theme {
 fun MyInAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -237,13 +235,13 @@ fun MyInAppTheme(
 //    )
 
     val typography = Typography(
-        headlineLarge = TextStyle.Default,
-        headline = TextStyle.Default,
-        titleLarge = TextStyle.Default,
-        title = TextStyle.Default,
-        titleMedium = TextStyle.Default,
-        body = TextStyle.Default,
-        caption = TextStyle.Default,
+        headlineLarge = headlineLarge(),
+        headline = headline(),
+        titleLarge = titleLarge(),
+        title = title(),
+        titleMedium = titleMedium(),
+        body = body(),
+        caption = caption(),
     )
 
     CompositionLocalProvider(

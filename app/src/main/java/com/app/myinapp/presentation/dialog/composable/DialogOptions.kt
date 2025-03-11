@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -14,8 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.myinapp.presentation.ui.theme.Theme
 
@@ -40,16 +39,18 @@ fun DialogOptions(onClick: () -> Unit, icon: Int, str: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Icon(painter = painterResource(icon), "", tint = Theme.colors.onPrimaryContainer)
+            Icon(
+                painter = painterResource(icon),
+                "",
+                tint = Theme.colors.onPrimaryContainer,
+                modifier = Modifier.width(26.dp))
 
             Text(
                 text = str,
                 modifier = Modifier
                     .padding(12.dp, 0.dp)
                     .weight(1f),
-                style = TextStyle(
-                    fontWeight = FontWeight.SemiBold
-                ),
+                style = Theme.typography.titleMedium,
                 color = Theme.colors.onPrimaryContainer
             )
         }

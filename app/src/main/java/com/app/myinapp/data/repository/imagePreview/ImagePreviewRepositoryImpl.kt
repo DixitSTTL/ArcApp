@@ -41,11 +41,29 @@ class ImagePreviewRepositoryImpl(
             withContext(Dispatchers.IO) {
                 URL(photoDTO.src.original).openStream()
             }
-        val type =
-            if (wallpaperType == WallpaperType.LOCKSCREEN) WallpaperManager.FLAG_LOCK else WallpaperManager.FLAG_SYSTEM
-        wallpaperManager.setStream(
-            inputStream, null, true, type
-        )
+        when (wallpaperType) {
+            WallpaperType.DASHBOARDSCREEN -> {
+                wallpaperManager.setStream(
+                    inputStream, null, true, WallpaperManager.FLAG_SYSTEM
+                )
+            }
+
+            WallpaperType.LOCKSCREEN -> {
+                wallpaperManager.setStream(
+                    inputStream, null, true, WallpaperManager.FLAG_LOCK
+                )
+            }
+
+            WallpaperType.BOTHSCREEN -> {
+                wallpaperManager.setStream(
+                    inputStream, null, true, WallpaperManager.FLAG_SYSTEM
+                )
+                wallpaperManager.setStream(
+                    inputStream, null, true, WallpaperManager.FLAG_LOCK
+                )
+            }
+        }
+
     }
 
     override suspend fun downloadWallpaper(photoDTO: PhotoDTO) {

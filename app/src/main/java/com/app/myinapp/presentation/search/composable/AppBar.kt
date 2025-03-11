@@ -17,12 +17,9 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.app.myinapp.R
 import com.app.myinapp.presentation.search.SearchScreenInteract
 import com.app.myinapp.presentation.search.SearchScreenState
@@ -49,11 +46,7 @@ fun AppBar(
                 },
                 placeholder = {
                     Text(
-                        "Enter query", style = TextStyle(
-                            fontWeight = FontWeight.Normal,
-                            fontSize = 16.sp,
-
-                            ),
+                        "Enter query", style = Theme.typography.titleMedium,
                         color = Theme.colors.primaryContainer
                     )
                 },
@@ -75,10 +68,7 @@ fun AppBar(
                 keyboardActions = KeyboardActions(onDone = {
                     uiAction(SearchScreenInteract.searchList())
                 }),
-                textStyle = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                ),
+                textStyle = Theme.typography.titleMedium,
 
             )
         },

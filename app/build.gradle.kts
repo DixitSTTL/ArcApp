@@ -102,4 +102,10 @@ dependencies {
     //exoplayer
     implementation(libs.androidx.media3.exoplayer)
 
+    // google fonts
+    implementation(libs.androidx.ui.text.google.fonts)
+
+    // Splash core
+    implementation(libs.androidx.core.splashscreen)
+
 }

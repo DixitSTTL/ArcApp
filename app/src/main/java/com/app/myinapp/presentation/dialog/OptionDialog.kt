@@ -45,40 +45,36 @@ fun OptionDialog(
         }
     }
 
-    ModalBottomSheet(
-        sheetState = state,
+    ModalBottomSheet(sheetState = state,
         onDismissRequest = { navController.popBackStack() },
         containerColor = Theme.colors.primaryContainer,
-        dragHandle = {}
-    ) {
+        dragHandle = {}) {
 
         Column {
-            DialogOptions(
-                icon = R.drawable.ic_download,
-                str = "Download",
+            DialogOptions(icon = R.drawable.ic_image, str = "Set Dashboard", onClick = {
+                viewModel.sendAction(
+                    ImagePreviewInteract.setWallpaper(
+                        data, WallpaperType.DASHBOARDSCREEN
+                    )
+                )
+            })
+            DialogOptions(icon = R.drawable.ic_lock, str = "Set lock screen", onClick = {
+                viewModel.sendAction(
+                    ImagePreviewInteract.setWallpaper(
+                        data, WallpaperType.LOCKSCREEN
+                    )
+                )
+            })
+            DialogOptions(icon = R.drawable.ic_both, str = "Set Both", onClick = {
+                viewModel.sendAction(
+                    ImagePreviewInteract.setWallpaper(
+                        data, WallpaperType.BOTHSCREEN
+                    )
+                )
+            })
+            DialogOptions(icon = R.drawable.ic_download,
+                str = "Save to files",
                 onClick = { viewModel.sendAction(ImagePreviewInteract.downloadWallpaper(data)) })
-            DialogOptions(
-                icon = R.drawable.ic_download,
-                str = "Set lock screen",
-                onClick = {
-                    viewModel.sendAction(
-                        ImagePreviewInteract.setWallpaper(
-                            data,
-                            WallpaperType.LOCKSCREEN
-                        )
-                    )
-                })
-            DialogOptions(
-                icon = R.drawable.ic_download,
-                str = "Set Dashboard",
-                onClick = {
-                    viewModel.sendAction(
-                        ImagePreviewInteract.setWallpaper(
-                            data,
-                            WallpaperType.DASHBOARDSCREEN
-                        )
-                    )
-                })
 
         }
 

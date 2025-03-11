@@ -20,6 +20,7 @@ import com.app.myinapp.domain.usecase.UseCaseMainScreen
 import com.app.myinapp.domain.workmanager.FirstWorker
 import com.app.myinapp.domain.workmanager.SecondWorker
 import com.app.myinapp.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -92,7 +93,7 @@ class MainScreenViewModel(
     }
 
     private fun fetchFlowVideo() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             setDataState(state.value.copy(isLoading = true))
             val responseFlow = useCaseMainScreen.fetchFlowVideo().cachedIn(viewModelScope)
             setDataState(state.value.copy(isLoading = false, videoDTOFlowList = responseFlow))
@@ -100,7 +101,7 @@ class MainScreenViewModel(
     }
 
     private fun fetchFlowImage() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             setDataState(state.value.copy(isLoading = true))
             val responseFlow = useCaseMainScreen.fetchFlowImage().cachedIn(viewModelScope)
             setDataState(state.value.copy(isLoading = false, imageFlowList = responseFlow))

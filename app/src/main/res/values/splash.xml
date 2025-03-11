@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="splashTheme" parent="Theme.SplashScreen">
+
+        <item name="windowSplashScreenBackground">@color/b_w</item>
+        <!--        <item name="android:windowSplashScreenBackground" tools:ignore="NewApi">@color/white</item>-->
+        <!--        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_logo_main_round</item>-->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/avd_anim</item>
+        <!--    <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!--        <item name="android:windowTranslucentStatus">true</item> &lt;!&ndash;Transparent StatusBar&ndash;&gt;-->
+        <!--        <item name="android:windowTranslucentNavigation">true</item> &lt;!&ndash;Transparent Navigation&ndash;&gt;-->
+        <item name="windowSplashScreenAnimationDuration">1000</item> <!--Transparent Navigation-->
+        <item name="postSplashScreenTheme">@style/Theme.MyInApp
+        </item> <!--Transparent Navigation-->
+    </style>
+</resources>
