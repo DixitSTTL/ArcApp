@@ -103,7 +103,7 @@ fun SharedTransitionScope.SearchScreen(
             else
                 VideoList(stateVideoFlow,{it
                     viewModel.sendAction(SearchScreenInteract.navigateVideoPreview(it))
-                })
+                }, animatedVisibilityScope)
         }
     }
 

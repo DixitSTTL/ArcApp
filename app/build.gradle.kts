@@ -101,6 +101,7 @@ dependencies {
 
     //exoplayer
     implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
 
     // google fonts
     implementation(libs.androidx.ui.text.google.fonts)

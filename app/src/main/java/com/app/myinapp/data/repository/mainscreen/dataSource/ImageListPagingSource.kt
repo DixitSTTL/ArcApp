@@ -29,11 +29,8 @@ class ImageListPagingSource(private val networkClient: NetworkClient) : PagingSo
             )
         } catch (e: Exception) {
             Log.d("TAG", "loadeee: " + e.message)
-
             LoadResult.Error(e)
 
         }
-
-
     }
 }

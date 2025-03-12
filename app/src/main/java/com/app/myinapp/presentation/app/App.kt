@@ -143,7 +143,7 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
                             Gson().fromJson(dataJson, VideoDTO::class.java) // Decode recipe JSON
 
                         data?.let {
-                            VideoPreviewScreen(navController, data)
+                            VideoPreviewScreen(navController, data,animatedVisibilityScope = this@composable)
 
                         }
                     }

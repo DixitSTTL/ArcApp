@@ -170,7 +170,7 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                         1 -> {
                             VideoList(stateVideoFlow, onClick = {it
                                 viewModel.sendAction(MainScreenInteract.navigateVideoPreview(it))
-                            })
+                            }, animatedVisibilityScope)
                         }
                     }
                 }

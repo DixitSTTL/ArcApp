@@ -5,6 +5,7 @@ import com.app.myinapp.presentation.imagePreview.ImagePreviewViewModel
 import com.app.myinapp.presentation.main.MainScreenViewModel
 import com.app.myinapp.presentation.search.SearchScreenViewModel
 import com.app.myinapp.presentation.setting.SettingScreenViewModel
+import com.app.myinapp.presentation.videoPreview.VideoScreenViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -14,6 +15,7 @@ val ViewModelModule = module {
     viewModel { SearchScreenViewModel(get()) }
     viewModel { ImagePreviewViewModel(get()) }
     viewModel { SettingScreenViewModel(get()) }
+    viewModel { VideoScreenViewModel(get()) }
     viewModel { AppViewModel(get()) }
 
 }

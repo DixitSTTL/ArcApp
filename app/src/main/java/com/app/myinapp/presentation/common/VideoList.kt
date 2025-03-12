@@ -1,5 +1,8 @@
 package com.app.myinapp.presentation.common
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -23,26 +25,38 @@ import coil3.compose.AsyncImage
 import com.app.myinapp.data.model.VideoDTO
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun VideoList(videoDTOList: LazyPagingItems<VideoDTO>, onClick: (VideoDTO) -> Unit) {
+fun SharedTransitionScope.VideoList(
+    videoDTOList: LazyPagingItems<VideoDTO>,
+    onClick: (VideoDTO) -> Unit,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize(),
         columns = GridCells.Fixed(2),
     ) {
-        itemsIndexed(videoDTOList.itemSnapshotList.items) { index, item ->
-            Card (
+        items(videoDTOList.itemCount) { index ->
+            val item =
+                videoDTOList[index] ?: return@items // This ensures pagination works correctly
+
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .padding(4.dp),
+                    .padding(4.dp)
+                    .sharedElement(
+                        rememberSharedContentState(key = "${item.id}"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                    ),
                 onClick = {
                     onClick(item)
                 }
-            ){
+            ) {
 
                 AsyncImage(
-                    model = item.image,
+                    model = videoDTOList[index]?.image,
                     contentDescription = "",
                     modifier = Modifier
                         .fillMaxSize()

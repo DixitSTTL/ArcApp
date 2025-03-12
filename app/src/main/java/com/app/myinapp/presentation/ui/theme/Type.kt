@@ -5,25 +5,12 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.googlefonts.Font
-import androidx.compose.ui.text.googlefonts.GoogleFont
-import com.app.myinapp.R
 
-val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.com_google_android_gms_fonts_certs
-)
 
-val fontFamily = FontFamily(
-    Font(
-        googleFont = GoogleFont("Zilla Slab"),
-        fontProvider = provider
-    )
-)
+
 
 @Composable
-fun headlineLarge(): TextStyle {
+fun headlineLarge(fontFamily: FontFamily): TextStyle {
     return TextStyle(
         fontSize = 24.sp,
         lineHeight = 32.4.sp,
@@ -32,7 +19,7 @@ fun headlineLarge(): TextStyle {
     )
 }
 @Composable
-fun headline(): TextStyle {
+fun headline(fontFamily: FontFamily): TextStyle {
     return TextStyle(
         fontSize = 20.sp,
         fontFamily = fontFamily,
@@ -40,7 +27,7 @@ fun headline(): TextStyle {
     )
 }
 @Composable
-fun titleLarge(): TextStyle {
+fun titleLarge(fontFamily: FontFamily): TextStyle {
     return TextStyle(
         fontSize = 16.sp,
         lineHeight = 20.sp,
@@ -49,7 +36,7 @@ fun titleLarge(): TextStyle {
     )
 }
 @Composable
-fun title(): TextStyle {
+fun title(fontFamily: FontFamily): TextStyle {
     return TextStyle(
         fontSize = 14.sp,
         fontFamily = fontFamily,
@@ -57,7 +44,7 @@ fun title(): TextStyle {
     )
 }
 @Composable
-fun titleMedium(): TextStyle {
+fun titleMedium(fontFamily: FontFamily): TextStyle {
     return TextStyle(
         fontSize = 16.sp,
         fontFamily = fontFamily,
@@ -65,7 +52,7 @@ fun titleMedium(): TextStyle {
     )
 }
 @Composable
-fun body(): TextStyle {
+fun body(fontFamily: FontFamily): TextStyle {
     return TextStyle(
         fontSize = 14.sp,
         lineHeight = 19.6.sp,
@@ -74,7 +61,7 @@ fun body(): TextStyle {
     )
 }
 @Composable
-fun caption(): TextStyle {
+fun caption(fontFamily: FontFamily): TextStyle {
     return TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.W400,

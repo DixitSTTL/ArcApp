@@ -10,9 +10,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
+import com.app.myinapp.R
 
 data class Colors(
     val black: Color,
@@ -233,15 +238,26 @@ fun MyInAppTheme(
 //        typography = Typography,
 //        content = content
 //    )
+    val provider = GoogleFont.Provider(
+        providerAuthority = "com.google.android.gms.fonts",
+        providerPackage = "com.google.android.gms",
+        certificates = R.array.com_google_android_gms_fonts_certs
+    )
 
+    val fontFamily = remember { FontFamily(
+        Font(
+            googleFont = GoogleFont("Zilla Slab"),
+            fontProvider = provider
+        )
+    ) }
     val typography = Typography(
-        headlineLarge = headlineLarge(),
-        headline = headline(),
-        titleLarge = titleLarge(),
-        title = title(),
-        titleMedium = titleMedium(),
-        body = body(),
-        caption = caption(),
+        headlineLarge = headlineLarge(fontFamily),
+        headline = headline(fontFamily),
+        titleLarge = titleLarge(fontFamily),
+        title = title(fontFamily),
+        titleMedium = titleMedium(fontFamily),
+        body = body(fontFamily),
+        caption = caption(fontFamily),
     )
 
     CompositionLocalProvider(

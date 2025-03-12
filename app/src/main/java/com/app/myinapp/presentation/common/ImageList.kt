@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -38,7 +37,9 @@ fun SharedTransitionScope.ImageList(
             .fillMaxSize(),
         columns = GridCells.Fixed(3),
     ) {
-        itemsIndexed(imageList.itemSnapshotList.items) { index, item ->
+        items(imageList.itemCount) { index ->
+            val item = imageList[index]?:return@items // This ensures pagination works correctly
+
             Card (
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,6 +112,4 @@ fun SharedTransitionScope.ImageList(
             }
         }
     }
-
-
 }
