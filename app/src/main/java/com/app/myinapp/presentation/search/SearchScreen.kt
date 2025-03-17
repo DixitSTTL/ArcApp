@@ -93,7 +93,7 @@ fun SharedTransitionScope.SearchScreen(
 
     ) { it ->
         Box(Modifier
-            .padding(it)
+            .padding(top = it.calculateTopPadding())
             .background(color = Theme.colors.background)) {
 
             if (searchType == "Images")

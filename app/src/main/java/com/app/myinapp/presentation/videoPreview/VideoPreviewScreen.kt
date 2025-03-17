@@ -1,6 +1,9 @@
 package com.app.myinapp.presentation.videoPreview
 
+import android.util.Log
+import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE
 import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -10,20 +13,30 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
+import androidx.media3.ui.PlayerControlView
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavHostController
 import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.presentation.ui.theme.Theme
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @UnstableApi
@@ -32,35 +45,63 @@ fun SharedTransitionScope.VideoPreviewScreen(
     navController: NavHostController,
     data: VideoDTO,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: VideoScreenViewModel = koinViewModel()
+    viewModel: VideoScreenViewModel = koinViewModel(parameters = { parametersOf(data) })
 ) {
 
     val context = LocalContext.current
+    val systemUiController: SystemUiController = rememberSystemUiController()
     // Initialize ExoPlayer
-    val exoPlayer = remember { viewModel.exoplayer }
+    val state by viewModel.state.collectAsState()
+        val exoPlayer = remember { viewModel.exoplayer }
+    systemUiController.isSystemBarsVisible = state.isVisible
+    systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_BARS_BY_SWIPE
 
-    LaunchedEffect(key1 = data) {
-        if (exoPlayer.currentMediaItem == null) {
-            delay(300) //
-            viewModel.setMedia(data)
+
+    DisposableEffect(key1 = data) {
+        onDispose {
+            systemUiController.isSystemBarsVisible = true
+            systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_BARS_BY_SWIPE
         }
     }
-//    DisposableEffect(Unit) {
-//        onDispose {
-//
-//            Log.d("TAG", "VideoPreviewScreen:ff "+exoPlayer)
-//            exoPlayer.release() // Release ExoPlayer when leaving the screen
-//        }
-//    }
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-//    Seek to the specified index and start playing
-//    exoPlayer.seekTo(playingIndex.value, C.TIME_UNSET)
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
+                    if (!exoPlayer.isPlaying)
+//                    exoPlayer.play()
+                    Log.d("LifecycleAwareComponent", "ON_RESUME triggered")
+                    // Handle onResume logic here
+                }
+                Lifecycle.Event.ON_PAUSE -> {
+                    if (exoPlayer.isPlaying)
+                    exoPlayer.pause()
+                    Log.d("LifecycleAwareComponent", "ON_PAUSE triggered")
+                    // Handle onPause logic here
+                }
+                Lifecycle.Event.ON_STOP -> {
+                    Log.d("LifecycleAwareComponent", "ON_STOP triggered")
+                    // Handle onStop logic here
+                }
+                Lifecycle.Event.ON_DESTROY -> {
+                    Log.d("LifecycleAwareComponent", "ON_DESTROY triggered")
+                    // Handle onStop logic here
+                }
+                else -> {}
+            }
+        }
 
+        lifecycleOwner.lifecycle.addObserver(observer)
 
-    Scaffold { it ->
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    Scaffold { padding ->
         Box(
             Modifier
-                .padding(it)
                 .background(color = Theme.colors.background)
         ) {
             AndroidView(
@@ -86,6 +127,15 @@ fun SharedTransitionScope.VideoPreviewScreen(
                         setShowFastForwardButton(true)
                         setShowRewindButton(true)
                         setFullscreenButtonState(true)
+                        setControllerVisibilityListener(PlayerControlView.VisibilityListener { it ->
+                        })
+                        setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
+                            viewModel.setDataState(
+
+                                state.copy(isVisible = visibility == View.VISIBLE)
+                            )
+                        }
+                        )
                     }
                 })
         }

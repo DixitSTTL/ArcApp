@@ -72,7 +72,8 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
                 composable<routes.MAIN_SCREEN> { backStackEntry ->
                     MainScreen(
                         navController,
-                        animatedVisibilityScope = this@composable)
+                        animatedVisibilityScope = this@composable
+                    )
                 }
 
                 composable(
@@ -133,7 +134,8 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
                 }
 
                 composable(routes.VIDEO_PREVIEW_SCREEN.route,
-                    arguments = listOf(navArgument("Video") { type = NavType.StringType })) { backStackEntry ->
+                    arguments = listOf(navArgument("Video") { type = NavType.StringType })
+                ) { backStackEntry ->
                     BackHandler {
                         navController.popBackStack()
                     }
@@ -143,7 +145,11 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
                             Gson().fromJson(dataJson, VideoDTO::class.java) // Decode recipe JSON
 
                         data?.let {
-                            VideoPreviewScreen(navController, data,animatedVisibilityScope = this@composable)
+                            VideoPreviewScreen(
+                                navController,
+                                data,
+                                animatedVisibilityScope = this@composable
+                            )
 
                         }
                     }

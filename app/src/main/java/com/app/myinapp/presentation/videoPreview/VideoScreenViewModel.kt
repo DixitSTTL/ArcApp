@@ -9,12 +9,16 @@ import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.presentation.base.BaseViewModel
 
 class VideoScreenViewModel(
+    private val data: VideoDTO,
     private val context: Application,
     ) : BaseViewModel<VideoScreenState, VideoScreenInteract>(VideoScreenState()) {
 
     val exoplayer = ExoPlayer.Builder(context).build()
+    init {
+        setMedia(data)
+    }
 
-    fun setMedia(data: VideoDTO) {
+    private fun setMedia(data: VideoDTO) {
         val mediaItems = arrayListOf<MediaItem>()
         mediaItems.add(
             MediaItem.Builder()
@@ -33,14 +37,15 @@ class VideoScreenViewModel(
                 override fun onEvents(player: Player, events: Player.Events) {
                     super.onEvents(player, events)
                     // Hide video title after playing for 200 milliseconds
-//                    if (player.contentPosition >= 200) visible.value = false
+//                    if (player.contentPosition >= 200) setDataState(state.value.copy(isVisible = false))
+
                 }
 
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                     super.onMediaItemTransition(mediaItem, reason)
                     // Callback when the video changes
 //                    onVideoChange(this@apply.currentPeriodIndex)
-//                    visible.value = true
+//                    setDataState(state.value.copy(isVisible = true))
 //                    videoTitle.value = mediaItem?.mediaMetadata?.displayTitle.toString()
                 }
 

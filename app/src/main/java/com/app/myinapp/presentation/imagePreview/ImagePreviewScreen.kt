@@ -72,10 +72,9 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
     Scaffold { padding ->
         Box(Modifier.background(color = Theme.colors.background)) {
-            Column {
+            Column(Modifier.padding(padding)) {
                 Box(
                     modifier = Modifier
-                        .padding(padding)
                         .weight(1f)
                 ) {
                     Card(

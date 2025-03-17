@@ -222,6 +222,10 @@ fun MyInAppTheme(
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
+
+
+//    activity.window.statusBarColor = android.graphics.Color.TRANSPARENT
+//    activity.window.navigationBarColor = android.graphics.Color.TRANSPARENT// Change to your color
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -231,7 +235,16 @@ fun MyInAppTheme(
         darkTheme -> _DarkColorScheme
         else -> _LightColorScheme
     }
-
+//    SideEffect {
+//        activity.window.statusBarColor = colorScheme.primaryContainer.toArgb()
+//        activity.window.navigationBarColor = colorScheme.background.toArgb()// Change to your color
+//        val insetsController =
+//            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+//        insetsController.isAppearanceLightStatusBars = true // Dark icons for light background
+//        insetsController.isAppearanceLightNavigationBars = true // Light icons for dark background
+//        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE // Light icons for dark background
+//        activity.window.decorView.systemUiVisibility= View.SYSTEM_UI_FLAG_VISIBLE
+//    }
 
 //    MaterialTheme(
 //        colorScheme = colorScheme,

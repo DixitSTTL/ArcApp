@@ -99,8 +99,9 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         Box(modifier = Modifier
-            .padding(innerPadding)
-            .background(color = Theme.colors.background)) {
+            .padding(top = innerPadding.calculateTopPadding())
+            .background(color = Theme.colors.background))
+            {
 
             Column(
                 modifier = Modifier

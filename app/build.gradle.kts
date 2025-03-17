@@ -109,4 +109,7 @@ dependencies {
     // Splash core
     implementation(libs.androidx.core.splashscreen)
 
+    //systemUiController
+    implementation (libs.accompanist.systemuicontroller)
+
 }

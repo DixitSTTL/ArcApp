@@ -1,5 +1,6 @@
 package com.app.myinapp.presentation.di
 
+import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.presentation.app.AppViewModel
 import com.app.myinapp.presentation.imagePreview.ImagePreviewViewModel
 import com.app.myinapp.presentation.main.MainScreenViewModel
@@ -15,7 +16,7 @@ val ViewModelModule = module {
     viewModel { SearchScreenViewModel(get()) }
     viewModel { ImagePreviewViewModel(get()) }
     viewModel { SettingScreenViewModel(get()) }
-    viewModel { VideoScreenViewModel(get()) }
+    viewModel { (video: VideoDTO) -> VideoScreenViewModel(video,get()) }
     viewModel { AppViewModel(get()) }
 
 }

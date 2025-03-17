@@ -55,7 +55,7 @@ fun SettingScreen(
     ) { it ->
         Box(
             Modifier
-                .padding(it)
+                .padding(top = it.calculateTopPadding())
                 .fillMaxSize()
                 .background(color = Theme.colors.background)
         ) {

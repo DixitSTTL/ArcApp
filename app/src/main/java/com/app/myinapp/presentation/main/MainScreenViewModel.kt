@@ -78,7 +78,6 @@ class MainScreenViewModel(
 
 
     fun startJob() {
-        Log.d("MyJobService", "viewmodel: " + Thread.currentThread())
 
         val componentName = ComponentName(myApp, MyJobService::class.java)
         val jobInfo = JobInfo.Builder(1, componentName)
