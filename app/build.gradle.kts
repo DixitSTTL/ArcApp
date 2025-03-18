@@ -31,6 +31,15 @@ android {
             )
         }
     }
+
+    ndkVersion = "23.1.7779620"
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -80,6 +89,7 @@ dependencies {
 
     //room
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.paging)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 

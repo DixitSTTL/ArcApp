@@ -15,8 +15,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.data.model.VideoDTO
+import com.app.myinapp.domain.model.Photo
 import com.app.myinapp.presentation.coreImagePreview.CorePreviewScreen
 import com.app.myinapp.presentation.dialog.OptionDialog
 import com.app.myinapp.presentation.imagePreview.ImagePreviewScreen
@@ -100,7 +100,7 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
                     backStackEntry.arguments?.let {
                         val dataJson = backStackEntry.arguments?.getString("Photo")
                         val data =
-                            Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
+                            Gson().fromJson(dataJson, Photo::class.java) // Decode recipe JSON
 
                         data?.let {
                             ImagePreviewScreen(
@@ -124,10 +124,10 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
                     backStackEntry.arguments?.let {
                         val dataJson = backStackEntry.arguments?.getString("Photo")
                         val data =
-                            Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
+                            Gson().fromJson(dataJson, Photo::class.java) // Decode recipe JSON
 
                         data?.let {
-                            CorePreviewScreen(navController, data)
+                            CorePreviewScreen(navController, data, animatedVisibilityScope = this@composable)
                         }
                     }
 
@@ -169,7 +169,7 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
                     backStackEntry.arguments?.let {
                         val dataJson = backStackEntry.arguments?.getString("Photo")
                         val data =
-                            Gson().fromJson(dataJson, PhotoDTO::class.java) // Decode recipe JSON
+                            Gson().fromJson(dataJson, Photo::class.java) // Decode recipe JSON
 
                         data?.let {
                             OptionDialog(navController, data)

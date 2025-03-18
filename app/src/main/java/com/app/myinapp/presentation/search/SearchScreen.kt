@@ -53,7 +53,7 @@ fun SharedTransitionScope.SearchScreen(
         viewModel.uiAction.collect {
             when (it) {
                 is SearchScreenInteract.navigateImagePreview -> {
-                    val data = Uri.encode(Gson().toJson(it.data))
+                    val data = Uri.encode(Gson().toJson(it.data.toPhoto()))
                     navController.navigate("${routes.IMAGE_PREVIEW_SCREEN}/${data}")
                 }
 

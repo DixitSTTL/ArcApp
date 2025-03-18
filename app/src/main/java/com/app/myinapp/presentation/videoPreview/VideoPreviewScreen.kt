@@ -127,8 +127,6 @@ fun SharedTransitionScope.VideoPreviewScreen(
                         setShowFastForwardButton(true)
                         setShowRewindButton(true)
                         setFullscreenButtonState(true)
-                        setControllerVisibilityListener(PlayerControlView.VisibilityListener { it ->
-                        })
                         setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
                             viewModel.setDataState(
 

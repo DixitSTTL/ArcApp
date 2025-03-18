@@ -5,7 +5,6 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.work.Constraints
@@ -19,8 +18,10 @@ import com.app.myinapp.domain.usecase.UseCaseMainScreen
 import com.app.myinapp.domain.workmanager.FirstWorker
 import com.app.myinapp.domain.workmanager.SecondWorker
 import com.app.myinapp.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 
 class MainScreenViewModel(
@@ -32,6 +33,7 @@ class MainScreenViewModel(
         if (state.value.imageFlowList == emptyFlow<PhotoDTO>()) {
             fetchFlowImage()
             fetchFlowVideo()
+            fetchFlowLikedImage()
 
         }
     }
@@ -49,6 +51,15 @@ class MainScreenViewModel(
             val responseFlow = useCaseMainScreen.fetchFlowImage().cachedIn(viewModelScope)
             setDataState(state.value.copy(isLoading = false, imageFlowList = responseFlow))
 
+        }
+    }
+
+    private fun fetchFlowLikedImage() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val responseFlow = useCaseMainScreen.fetchFlowLikedImage().cachedIn(viewModelScope)
+            withContext(Dispatchers.Main){
+                setDataState(state.value.copy(isLoading = false, likedImageFlowList = responseFlow))
+            }
         }
     }
 

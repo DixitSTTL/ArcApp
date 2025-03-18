@@ -6,6 +6,7 @@ import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.data.model.VideoListDTO
 import com.app.myinapp.data.utils.ResponseResult
+import com.app.myinapp.domain.model.Photo
 import com.app.myinapp.domain.repository.MainScreenRepository
 import kotlinx.coroutines.flow.Flow
 
@@ -25,5 +26,9 @@ class UseCaseMainScreen(private val mainScreenRepository: MainScreenRepository) 
 
     suspend fun fetchFlowVideo(): Flow<PagingData<VideoDTO>> {
         return mainScreenRepository.getFlowVideoList()
+    }
+
+    suspend fun fetchFlowLikedImage(): Flow<PagingData<Photo>> {
+        return mainScreenRepository.getFlowLikedImageList()
     }
 }

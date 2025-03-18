@@ -11,13 +11,16 @@ import com.app.myinapp.data.network.NetworkClient
 import com.app.myinapp.data.repository.mainscreen.dataSource.ImageListPagingSource
 import com.app.myinapp.data.repository.mainscreen.dataSource.VideoListPagingSource
 import com.app.myinapp.data.utils.ResponseResult
+import com.app.myinapp.domain.model.Photo
 import com.app.myinapp.domain.repository.MainScreenRepository
+import com.app.myinapp.domain.room.DatabaseHelper
 import kotlinx.coroutines.flow.Flow
 
 class MainScreenRepositoryImpl(
     private val networkClient: NetworkClient,
     private val imageListPagingSource: ImageListPagingSource,
-    private val videoListPagingSource: VideoListPagingSource
+    private val videoListPagingSource: VideoListPagingSource,
+    private val databaseHelper: DatabaseHelper
 ) : MainScreenRepository {
     override suspend fun getImageList(): ResponseResult<ImageListDTO> {
         return networkClient.getImageList()
@@ -32,6 +35,12 @@ class MainScreenRepositoryImpl(
     override suspend fun getFlowVideoList(): Flow<PagingData<VideoDTO>> = Pager(
         config = PagingConfig(20), pagingSourceFactory = {
             videoListPagingSource
+        }
+    ).flow
+
+    override suspend fun getFlowLikedImageList(): Flow<PagingData<Photo>> = Pager(
+        config = PagingConfig(20), pagingSourceFactory = {
+            databaseHelper.daoLiked().getAllLiked()
         }
     ).flow
 

@@ -8,20 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import com.app.myinapp.R
-import com.app.myinapp.data.model.PhotoDTO
+import com.app.myinapp.domain.model.Photo
 import com.app.myinapp.presentation.dialog.composable.DialogOptions
 import com.app.myinapp.presentation.imagePreview.ImagePreviewInteract
 import com.app.myinapp.presentation.imagePreview.ImagePreviewViewModel
 import com.app.myinapp.presentation.imagePreview.WallpaperType
 import com.app.myinapp.presentation.ui.theme.Theme
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OptionDialog(
     navController: NavHostController,
-    data: PhotoDTO,
-    viewModel: ImagePreviewViewModel = koinViewModel()
+    data: Photo,
+    viewModel: ImagePreviewViewModel = koinViewModel(parameters = { parametersOf(data) })
 ) {
     val state = rememberModalBottomSheetState(true)
     LaunchedEffect(Unit) {
@@ -31,16 +32,18 @@ fun OptionDialog(
                 is ImagePreviewInteract.navigateDialog -> {}
                 is ImagePreviewInteract.shareImage -> {}
                 is ImagePreviewInteract.setWallpaper -> {
-                    viewModel.setWallpaper(it.data, it.wallpaperType)
+                    viewModel.setWallpaper(it.wallpaperType)
                 }
 
                 is ImagePreviewInteract.downloadWallpaper -> {
-                    viewModel.downloadWallpaper(it.data)
+                    viewModel.downloadWallpaper()
                 }
 
                 is ImagePreviewInteract.dismissDialog -> {
                     navController.popBackStack()
                 }
+
+                is ImagePreviewInteract.likeWallpaper -> {}
             }
         }
     }
@@ -54,27 +57,27 @@ fun OptionDialog(
             DialogOptions(icon = R.drawable.ic_image, str = "Set Dashboard", onClick = {
                 viewModel.sendAction(
                     ImagePreviewInteract.setWallpaper(
-                        data, WallpaperType.DASHBOARDSCREEN
+                         WallpaperType.DASHBOARDSCREEN
                     )
                 )
             })
             DialogOptions(icon = R.drawable.ic_lock, str = "Set lock screen", onClick = {
                 viewModel.sendAction(
                     ImagePreviewInteract.setWallpaper(
-                        data, WallpaperType.LOCKSCREEN
+                         WallpaperType.LOCKSCREEN
                     )
                 )
             })
             DialogOptions(icon = R.drawable.ic_both, str = "Set Both", onClick = {
                 viewModel.sendAction(
                     ImagePreviewInteract.setWallpaper(
-                        data, WallpaperType.BOTHSCREEN
+                         WallpaperType.BOTHSCREEN
                     )
                 )
             })
             DialogOptions(icon = R.drawable.ic_download,
                 str = "Save to files",
-                onClick = { viewModel.sendAction(ImagePreviewInteract.downloadWallpaper(data)) })
+                onClick = { viewModel.sendAction(ImagePreviewInteract.downloadWallpaper()) })
 
         }
 

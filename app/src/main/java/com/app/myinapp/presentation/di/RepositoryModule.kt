@@ -17,9 +17,9 @@ import org.koin.dsl.module
 val RepositoryModule = module {
 
     single<UserRepository> { UserRepositoryImpl(get()) }
-    single<MainScreenRepository> { MainScreenRepositoryImpl(get(), get(), get()) }
+    single<MainScreenRepository> { MainScreenRepositoryImpl(get(), get(), get(), get()) }
     single<SearchScreenRepository> { SearchScreenRepositoryImpl(get()) }
-    single<ImagePreviewRepository> { ImagePreviewRepositoryImpl(get()) }
+    single<ImagePreviewRepository> { ImagePreviewRepositoryImpl(get(),get()) }
     single<SettingScreenRepository> { SettingScreenRepositoryImpl(get()) }
     factory { ImageListPagingSource(get()) }
     factory { VideoListPagingSource(get()) }
