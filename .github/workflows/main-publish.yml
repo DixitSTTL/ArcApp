@@ -31,14 +31,14 @@ jobs:
         run: ./gradlew :app:assembleDebug --parallel --stacktrace
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload Build Logs (if build fails)
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: build-logs
           path: app/build/reports/
