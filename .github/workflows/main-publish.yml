@@ -1,9 +1,13 @@
 name: Android CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
+    if: github.event_name != 'release'  # This prevents execution on releases
     runs-on: ubuntu-22.04
 
     steps:
