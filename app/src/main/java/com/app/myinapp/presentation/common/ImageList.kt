@@ -18,10 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.app.myinapp.data.model.PhotoDTO
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -37,7 +40,7 @@ fun SharedTransitionScope.ImageList(
             .fillMaxSize(),
         columns = GridCells.Fixed(3),
     ) {
-        items(imageList.itemCount) { index ->
+        items(imageList.itemCount, key ={item -> item} ) { index ->
             val item = imageList[index]?:return@items // This ensures pagination works correctly
 
             Card (
@@ -59,7 +62,10 @@ fun SharedTransitionScope.ImageList(
             ){
 
                 AsyncImage(
-                    model = imageList[index]?.src?.portrait,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageList[index]?.src?.portrait)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = "",
                     modifier = Modifier
                         .fillMaxSize(),
