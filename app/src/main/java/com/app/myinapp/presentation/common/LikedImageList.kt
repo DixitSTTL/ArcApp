@@ -1,9 +1,8 @@
-package com.app.myinapp.presentation.main.composable
+package com.app.myinapp.presentation.common
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,15 +22,13 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
-import com.app.myinapp.data.model.PhotoDTO
-import com.app.myinapp.presentation.main.MainScreenInteract
-import kotlinx.coroutines.Job
+import com.app.myinapp.domain.model.Photo
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.ImageList(
-    imageList: LazyPagingItems<PhotoDTO>,
-    uiAction: (MainScreenInteract) -> Job,
+fun SharedTransitionScope.LikedImageList(
+    imageList: LazyPagingItems<Photo>,
+    onClick: (Photo) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
@@ -41,26 +38,28 @@ fun SharedTransitionScope.ImageList(
         columns = GridCells.Fixed(3),
     ) {
         items(imageList.itemCount) { index ->
+            val item = imageList[index]?:return@items // This ensures pagination works correctly
+
             Card (
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
                     .padding(4.dp)
                     .sharedElement(
-                        rememberSharedContentState(key = "${imageList[index]!!.id}"),
+                        rememberSharedContentState(key = "${item.imageId}"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         zIndexInOverlay = 2F,
                     ),
                 onClick = {
                     imageList[index]?.let {
-                        uiAction.invoke(MainScreenInteract.navigateImagePreview(imageList[index]!!))
+                        onClick(item)
 
                     }
                 }
             ){
 
                 AsyncImage(
-                    model = imageList[index]?.src?.portrait,
+                    model = imageList[index]?.portrait,
                     contentDescription = "",
                     modifier = Modifier
                         .fillMaxSize(),
@@ -113,6 +112,4 @@ fun SharedTransitionScope.ImageList(
             }
         }
     }
-
-
 }

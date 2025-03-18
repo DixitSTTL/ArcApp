@@ -35,8 +35,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myinapp.presentation.main.composable.AppBar
-import com.app.myinapp.presentation.main.composable.ImageList
-import com.app.myinapp.presentation.main.composable.VideoList
+import com.app.myinapp.presentation.common.ImageList
+import com.app.myinapp.presentation.common.LikedImageList
+import com.app.myinapp.presentation.common.VideoList
 import com.app.myinapp.presentation.routes
 import com.app.myinapp.presentation.routes.IMAGE_PREVIEW_SCREEN
 import com.app.myinapp.presentation.routes.SEARCH_SCREEN
@@ -50,11 +51,12 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedVisibilityScope: AnimatedVisibilityScope, viewModel: MainScreenViewModel = koinViewModel()) {
 
-    val pagerState = rememberPagerState(pageCount = { 2 })
-    val titles = listOf("Images", "Videos")
+    val pagerState = rememberPagerState(pageCount = { 3 })
+    val titles = listOf("Images", "Videos", "Liked")
     val state by viewModel.state.collectAsState()
     val stateImageFlow = state.imageFlowList.collectAsLazyPagingItems()
     val stateVideoFlow = state.videoDTOFlowList.collectAsLazyPagingItems()
+    val stateLikedImageFlow = state.likedImageFlowList.collectAsLazyPagingItems()
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
@@ -99,8 +101,9 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
     ) { innerPadding ->
         Box(modifier = Modifier
-            .padding(innerPadding)
-            .background(color = Theme.colors.background)) {
+            .padding(top = innerPadding.calculateTopPadding())
+            .background(color = Theme.colors.background))
+            {
 
             Column(
                 modifier = Modifier
@@ -162,11 +165,21 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                     when (it) {
 
                         0 -> {
-                            ImageList(stateImageFlow, viewModel::sendAction,animatedVisibilityScope)
+                            ImageList(stateImageFlow, onClick = {it
+                                viewModel.sendAction(MainScreenInteract.navigateImagePreview(it.toPhoto()))
+                            } ,animatedVisibilityScope)
                         }
 
                         1 -> {
-                            VideoList(stateVideoFlow, viewModel::sendAction)
+                            VideoList(stateVideoFlow, onClick = {it
+                                viewModel.sendAction(MainScreenInteract.navigateVideoPreview(it))
+                            }, animatedVisibilityScope)
+                        }
+
+                        2 -> {
+                            LikedImageList(stateLikedImageFlow, onClick = {it
+                                viewModel.sendAction(MainScreenInteract.navigateImagePreview(it))
+                            }, animatedVisibilityScope)
                         }
                     }
                 }

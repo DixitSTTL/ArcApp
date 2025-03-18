@@ -1,11 +1,14 @@
 package com.app.myinapp.presentation.coreImagePreview
 
-import androidx.compose.foundation.Image
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,24 +16,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
-import com.app.myinapp.data.model.PhotoDTO
+import com.app.myinapp.domain.model.Photo
+import com.app.myinapp.presentation.ui.theme.Theme
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun CorePreviewScreen(navController: NavHostController, data: PhotoDTO) {
-    PinchToZoomView(Modifier,data)
+fun SharedTransitionScope.CorePreviewScreen(
+    navController: NavHostController,
+    data: Photo,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
+    Scaffold { padding ->
+
+        PinchToZoomView(Modifier, data, animatedVisibilityScope)
+    }
 
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun PinchToZoomView(
+fun SharedTransitionScope.PinchToZoomView(
     modifier: Modifier,
-    data: PhotoDTO,
+    data: Photo,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     // Mutable state variables to hold scale and offset values
     var scale by remember { mutableStateOf(1f) }
@@ -50,7 +63,7 @@ fun PinchToZoomView(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(Theme.colors.background)
             .pointerInput(Unit) {
                 detectTransformGestures { _, pan, zoom, _ ->
                     // Update scale with the zoom
@@ -106,9 +119,14 @@ fun PinchToZoomView(
     ) {
         // Image to be displayed with pinch-to-zoom functionality
         AsyncImage(
-            model = data.src.original,
+            model = data.original,
             contentDescription = "imageContentDescription",
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .sharedElement(
+                    rememberSharedContentState(key = "${data.imageId}"),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                ),
             contentScale = ContentScale.FillWidth
         )
     }

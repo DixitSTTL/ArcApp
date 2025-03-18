@@ -1,5 +1,6 @@
 package com.app.myinapp.data.model
 
+import com.app.myinapp.domain.model.Photo
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -41,7 +42,14 @@ data class PhotoDTO(
     val url: String,
     @SerialName("width")
     val width: Int
-)
+){
+    fun toPhoto()=Photo(
+        0,
+        this.id,
+        this.src.original,
+        this.src.portrait
+    )
+}
 
 @Serializable
 data class Src(

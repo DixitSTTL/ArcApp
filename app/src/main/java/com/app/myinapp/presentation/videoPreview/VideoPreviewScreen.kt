@@ -1,87 +1,141 @@
 package com.app.myinapp.presentation.videoPreview
 
 import android.util.Log
-import androidx.compose.foundation.AndroidExternalSurface
-import androidx.compose.foundation.layout.Arrangement
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE
+import android.widget.FrameLayout
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.media3.common.MediaItem
-import androidx.media3.exoplayer.ExoPlayer
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.ui.AspectRatioFrameLayout
+import androidx.media3.ui.PlayerControlView
+import androidx.media3.ui.PlayerView
 import androidx.navigation.NavHostController
 import com.app.myinapp.data.model.VideoDTO
+import com.app.myinapp.presentation.ui.theme.Theme
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
+@OptIn(ExperimentalSharedTransitionApi::class)
+@UnstableApi
 @Composable
-fun VideoPreviewScreen(navController: NavHostController, data: VideoDTO) {
-    val context = LocalContext.current
-    Log.d("TAG", "VideoPreviewScreen: ${data.url}")
-    val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().apply {
-            // Configure the player
-            // here I'm making the video loop
-            repeatMode = ExoPlayer.REPEAT_MODE_ALL
-            playWhenReady = true
+fun SharedTransitionScope.VideoPreviewScreen(
+    navController: NavHostController,
+    data: VideoDTO,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    viewModel: VideoScreenViewModel = koinViewModel(parameters = { parametersOf(data) })
+) {
 
-            setMediaItem(MediaItem.fromUri(data.videoFiles[0].link))
-            prepare()
+    val context = LocalContext.current
+    val systemUiController: SystemUiController = rememberSystemUiController()
+    // Initialize ExoPlayer
+    val state by viewModel.state.collectAsState()
+        val exoPlayer = remember { viewModel.exoplayer }
+    systemUiController.isSystemBarsVisible = state.isVisible
+    systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_BARS_BY_SWIPE
+
+
+    DisposableEffect(key1 = data) {
+        onDispose {
+            systemUiController.isSystemBarsVisible = true
+            systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_BARS_BY_SWIPE
         }
     }
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-        VideoSurface(modifier = Modifier.fillMaxWidth().height(data.height.dp), exoPlayer = exoPlayer)
-    }
-//    PlayerControls(exoPlayer)
-}
-
-@Composable
-fun VideoSurface(modifier: Modifier = Modifier, exoPlayer: ExoPlayer) {
-    AndroidExternalSurface(
-        modifier = modifier,
-        onInit = {
-            onSurface { surface, _, _ ->
-                exoPlayer.setVideoSurface(surface)
-                surface.onDestroyed { exoPlayer.setVideoSurface(null) }
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
+                    if (!exoPlayer.isPlaying)
+//                    exoPlayer.play()
+                    Log.d("LifecycleAwareComponent", "ON_RESUME triggered")
+                    // Handle onResume logic here
+                }
+                Lifecycle.Event.ON_PAUSE -> {
+                    if (exoPlayer.isPlaying)
+                    exoPlayer.pause()
+                    Log.d("LifecycleAwareComponent", "ON_PAUSE triggered")
+                    // Handle onPause logic here
+                }
+                Lifecycle.Event.ON_STOP -> {
+                    Log.d("LifecycleAwareComponent", "ON_STOP triggered")
+                    // Handle onStop logic here
+                }
+                Lifecycle.Event.ON_DESTROY -> {
+                    Log.d("LifecycleAwareComponent", "ON_DESTROY triggered")
+                    // Handle onStop logic here
+                }
+                else -> {}
             }
         }
-    )
-}
 
-@Composable
-fun PlayerControls(player: ExoPlayer?) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Button(onClick = { player?.playWhenReady = true }) {
-            Text("Play")
-        }
-        Button(onClick = { player?.playWhenReady = false }) {
-            Text("Pause")
-        }
+        lifecycleOwner.lifecycle.addObserver(observer)
 
-        Button(onClick = {
-            player?.seekTo(player.currentPosition - 10_000) // Seek backward 10 seconds
-        }) {
-            Text("Seek -10s")
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
-        Button(onClick = {
-            player?.seekTo(player.currentPosition + 10_000) // Seek forward 10 seconds
-        }) {
-            Text("Seek +10s")
+    }
+
+    Scaffold { padding ->
+        Box(
+            Modifier
+                .background(color = Theme.colors.background)
+        ) {
+            AndroidView(
+                modifier = Modifier
+                    .testTag("VIDEO_PLAYER_TAG")
+                    .sharedElement(
+                        rememberSharedContentState(key = "${data.id}"),
+                        animatedVisibilityScope = animatedVisibilityScope,
+                    ),
+                factory = {
+                    // AndroidView to embed a PlayerView into Compose
+                    PlayerView(context).apply {
+                        player = exoPlayer
+                        layoutParams = FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        // Set resize mode to fill the available space
+                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+                        // Hide unnecessary player controls
+                        setShowNextButton(false)
+                        setShowPreviousButton(false)
+                        setShowFastForwardButton(true)
+                        setShowRewindButton(true)
+                        setFullscreenButtonState(true)
+                        setControllerVisibilityListener(PlayerView.ControllerVisibilityListener { visibility ->
+                            viewModel.setDataState(
+
+                                state.copy(isVisible = visibility == View.VISIBLE)
+                            )
+                        }
+                        )
+                    }
+                })
         }
     }
 }

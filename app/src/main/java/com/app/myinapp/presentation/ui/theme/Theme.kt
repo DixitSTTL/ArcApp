@@ -10,9 +10,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
+import com.app.myinapp.R
 
 data class Colors(
     val black: Color,
@@ -217,6 +222,10 @@ fun MyInAppTheme(
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
+
+
+//    activity.window.statusBarColor = android.graphics.Color.TRANSPARENT
+//    activity.window.navigationBarColor = android.graphics.Color.TRANSPARENT// Change to your color
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -226,22 +235,42 @@ fun MyInAppTheme(
         darkTheme -> _DarkColorScheme
         else -> _LightColorScheme
     }
-
+//    SideEffect {
+//        activity.window.statusBarColor = colorScheme.primaryContainer.toArgb()
+//        activity.window.navigationBarColor = colorScheme.background.toArgb()// Change to your color
+//        val insetsController =
+//            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+//        insetsController.isAppearanceLightStatusBars = true // Dark icons for light background
+//        insetsController.isAppearanceLightNavigationBars = true // Light icons for dark background
+//        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE // Light icons for dark background
+//        activity.window.decorView.systemUiVisibility= View.SYSTEM_UI_FLAG_VISIBLE
+//    }
 
 //    MaterialTheme(
 //        colorScheme = colorScheme,
 //        typography = Typography,
 //        content = content
 //    )
+    val provider = GoogleFont.Provider(
+        providerAuthority = "com.google.android.gms.fonts",
+        providerPackage = "com.google.android.gms",
+        certificates = R.array.com_google_android_gms_fonts_certs
+    )
 
+    val fontFamily = remember { FontFamily(
+        Font(
+            googleFont = GoogleFont("Zilla Slab"),
+            fontProvider = provider
+        )
+    ) }
     val typography = Typography(
-        headlineLarge = headlineLarge(),
-        headline = headline(),
-        titleLarge = titleLarge(),
-        title = title(),
-        titleMedium = titleMedium(),
-        body = body(),
-        caption = caption(),
+        headlineLarge = headlineLarge(fontFamily),
+        headline = headline(fontFamily),
+        titleLarge = titleLarge(fontFamily),
+        title = title(fontFamily),
+        titleMedium = titleMedium(fontFamily),
+        body = body(fontFamily),
+        caption = caption(fontFamily),
     )
 
     CompositionLocalProvider(

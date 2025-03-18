@@ -6,7 +6,14 @@ import io.ktor.util.StringValues
 
 object NetworkConstants {
 
-    val BASE_URL = "api.pexels.com/v1"
+    init {
+        System.loadLibrary("securedata-lib")
+    }
+
+    private external fun getBaseURL():String
+    private external fun getAPIKEY():String
+
+    val BASE_URL = getBaseURL()
 
     //route
     val curated = "curated"
@@ -18,7 +25,7 @@ object NetworkConstants {
         return StringValues.build {
             append(
                 HttpHeaders.Authorization,
-                "x1rqvPKlrWj15hUunRzWy6T9WXLpJrXGFVcWi7fxaH1rb96FmSaVWKed"
+                getAPIKEY()
             )
         }
     }

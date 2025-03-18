@@ -1,4 +1,4 @@
-package com.app.myinapp.presentation.search.composable
+package com.app.myinapp.presentation.common
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -23,14 +23,12 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
 import com.app.myinapp.data.model.PhotoDTO
-import com.app.myinapp.presentation.search.SearchScreenInteract
-import kotlinx.coroutines.Job
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.ImageList(
     imageList: LazyPagingItems<PhotoDTO>,
-    uiAction: (SearchScreenInteract) -> Job,
+    onClick: (PhotoDTO) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
@@ -40,6 +38,7 @@ fun SharedTransitionScope.ImageList(
         columns = GridCells.Fixed(3),
     ) {
         items(imageList.itemCount) { index ->
+            val item = imageList[index]?:return@items // This ensures pagination works correctly
 
             Card (
                 modifier = Modifier
@@ -47,13 +46,13 @@ fun SharedTransitionScope.ImageList(
                     .height(300.dp)
                     .padding(4.dp)
                     .sharedElement(
-                        rememberSharedContentState(key = "${imageList[index]!!.id}"),
+                        rememberSharedContentState(key = "${item.id}"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         zIndexInOverlay = 2F,
                     ),
                 onClick = {
                     imageList[index]?.let {
-                        uiAction.invoke(SearchScreenInteract.navigateImagePreview(imageList[index]!!))
+                        onClick(item)
 
                     }
                 }
@@ -113,6 +112,4 @@ fun SharedTransitionScope.ImageList(
             }
         }
     }
-
-
 }

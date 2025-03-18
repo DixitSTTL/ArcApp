@@ -20,6 +20,8 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -29,22 +31,25 @@ import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.app.myinapp.R
 import com.app.myinapp.data.model.PhotoDTO
+import com.app.myinapp.domain.model.Photo
 import com.app.myinapp.presentation.imagePreview.composable.ActionButton
 import com.app.myinapp.presentation.routes.CORE_IMAGE_PREVIEW_SCREEN
 import com.app.myinapp.presentation.routes.OPTION_DIALOG
 import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.gson.Gson
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SharedTransitionScope.ImagePreviewScreen(
     navController: NavHostController,
-    data: PhotoDTO,
+    data: Photo,
     animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: ImagePreviewViewModel = koinViewModel()
+    viewModel: ImagePreviewViewModel = koinViewModel(parameters = { parametersOf(data) })
 ) {
 
+    val state by viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.uiAction.collect() { it ->
             when (it) {
@@ -59,7 +64,10 @@ fun SharedTransitionScope.ImagePreviewScreen(
                 }
 
                 is ImagePreviewInteract.shareImage -> {
-                    viewModel.shareImage(it.data)
+                    viewModel.shareImage()
+                }
+                is ImagePreviewInteract.likeWallpaper -> {
+                    viewModel.likeWallpaper()
                 }
 
                 is ImagePreviewInteract.setWallpaper -> {}
@@ -72,10 +80,9 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
     Scaffold { padding ->
         Box(Modifier.background(color = Theme.colors.background)) {
-            Column {
+            Column(Modifier.padding(padding)) {
                 Box(
                     modifier = Modifier
-                        .padding(padding)
                         .weight(1f)
                 ) {
                     Card(
@@ -83,14 +90,14 @@ fun SharedTransitionScope.ImagePreviewScreen(
                             .fillMaxSize()
                             .padding(10.dp)
                             .sharedElement(
-                                rememberSharedContentState(key = "${data.id}"),
+                                rememberSharedContentState(key = "${data.imageId}"),
                                 animatedVisibilityScope = animatedVisibilityScope,
                                 zIndexInOverlay = 2F,
                             )
                     ) {
 
                         AsyncImage(
-                            model = data.src.portrait,
+                            model = data.portrait,
                             contentDescription = "",
                             modifier = Modifier
                                 .fillMaxSize(),
@@ -129,7 +136,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     ActionButton(onclick = {
-                        viewModel.sendAction(ImagePreviewInteract.shareImage(data))
+                        viewModel.sendAction(ImagePreviewInteract.shareImage())
                     }, icon = R.drawable.ic_share)
 
                     ActionButton(onclick = {
@@ -137,8 +144,8 @@ fun SharedTransitionScope.ImagePreviewScreen(
                     }, icon = R.drawable.ic_download)
 
                     ActionButton(onclick = {
-
-                    }, icon = R.drawable.ic_like)
+                        viewModel.sendAction(ImagePreviewInteract.likeWallpaper())
+                    }, icon = if (state.isLiked)R.drawable.ic_liked else R.drawable.ic_like)
                 }
             }
         }
