@@ -45,6 +45,7 @@ import org.koin.core.parameter.parametersOf
 fun SharedTransitionScope.ImagePreviewScreen(
     navController: NavHostController,
     data: Photo,
+    index: String,
     animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: ImagePreviewViewModel = koinViewModel(parameters = { parametersOf(data) })
 ) {
@@ -55,7 +56,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
             when (it) {
                 is ImagePreviewInteract.navigateCoreImagePreview -> {
                     val data = Uri.encode(Gson().toJson(it.data))
-                    navController.navigate("${CORE_IMAGE_PREVIEW_SCREEN}/${data}")
+                    navController.navigate("${CORE_IMAGE_PREVIEW_SCREEN}/${data}/${index}")
                 }
 
                 is ImagePreviewInteract.navigateDialog -> {
@@ -90,7 +91,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
                             .fillMaxSize()
                             .padding(10.dp)
                             .sharedElement(
-                                rememberSharedContentState(key = "${data.imageId}"),
+                                rememberSharedContentState(key = "${data.imageId}_${index}"),
                                 animatedVisibilityScope = animatedVisibilityScope,
                                 zIndexInOverlay = 2F,
                             )
@@ -107,7 +108,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
                     IconButton(
                         onClick = {
-                            viewModel.sendAction(ImagePreviewInteract.navigateCoreImagePreview(data))
+                            viewModel.sendAction(ImagePreviewInteract.navigateCoreImagePreview(data,index))
                         },
                         modifier = Modifier
                             .padding(22.dp)

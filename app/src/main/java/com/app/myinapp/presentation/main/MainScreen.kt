@@ -66,7 +66,7 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
             when (it) {
                 is MainScreenInteract.navigateImagePreview -> {
                     val data = Uri.encode(Gson().toJson(it.data))
-                    navController.navigate("${IMAGE_PREVIEW_SCREEN}/${data}")
+                    navController.navigate("${IMAGE_PREVIEW_SCREEN}/${data}/${it.index}")
                 }
 
                 is MainScreenInteract.navigateSearch -> {
@@ -165,8 +165,8 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                     when (it) {
 
                         0 -> {
-                            ImageList(stateImageFlow, onClick = {it
-                                viewModel.sendAction(MainScreenInteract.navigateImagePreview(it.toPhoto()))
+                            ImageList(stateImageFlow, onClick = {it,index->
+                                viewModel.sendAction(MainScreenInteract.navigateImagePreview(it.toPhoto(),index))
                             } ,animatedVisibilityScope)
                         }
 
@@ -177,8 +177,8 @@ fun SharedTransitionScope.MainScreen(navController: NavHostController, animatedV
                         }
 
                         2 -> {
-                            LikedImageList(stateLikedImageFlow, onClick = {it
-                                viewModel.sendAction(MainScreenInteract.navigateImagePreview(it))
+                            LikedImageList(stateLikedImageFlow, onClick = {it,index->
+                                viewModel.sendAction(MainScreenInteract.navigateImagePreview(it,index))
                             }, animatedVisibilityScope)
                         }
                     }

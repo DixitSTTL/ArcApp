@@ -12,10 +12,10 @@ sealed class routes(val route: String) {
     data object SEARCH_SCREEN : routes("SEARCH_SCREEN/{Data}")
 
     @Serializable
-    data object IMAGE_PREVIEW_SCREEN : routes("IMAGE_PREVIEW_SCREEN/{Photo}")
+    data object IMAGE_PREVIEW_SCREEN : routes("IMAGE_PREVIEW_SCREEN/{Photo}/{Index}")
 
     @Serializable
-    data object CORE_IMAGE_PREVIEW_SCREEN : routes("CORE_IMAGE_PREVIEW_SCREEN/{Photo}")
+    data object CORE_IMAGE_PREVIEW_SCREEN : routes("CORE_IMAGE_PREVIEW_SCREEN/{Photo}/{Index}")
 
     @Serializable
     data object VIDEO_PREVIEW_SCREEN : routes("VIDEO_PREVIEW_SCREEN/{Video}")

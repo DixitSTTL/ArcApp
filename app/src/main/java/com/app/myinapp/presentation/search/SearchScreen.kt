@@ -54,7 +54,7 @@ fun SharedTransitionScope.SearchScreen(
             when (it) {
                 is SearchScreenInteract.navigateImagePreview -> {
                     val data = Uri.encode(Gson().toJson(it.data.toPhoto()))
-                    navController.navigate("${routes.IMAGE_PREVIEW_SCREEN}/${data}")
+                    navController.navigate("${routes.IMAGE_PREVIEW_SCREEN}/${data}/${it.index}")
                 }
 
                 is SearchScreenInteract.navigateVideoPreview -> {
@@ -97,8 +97,8 @@ fun SharedTransitionScope.SearchScreen(
             .background(color = Theme.colors.background)) {
 
             if (searchType == "Images")
-                ImageList(stateImageFlow, onClick = {it
-                    viewModel.sendAction(SearchScreenInteract.navigateImagePreview(it))
+                ImageList(stateImageFlow, onClick = {it,index->
+                    viewModel.sendAction(SearchScreenInteract.navigateImagePreview(it,index))
                 }, animatedVisibilityScope)
             else
                 VideoList(stateVideoFlow,{it

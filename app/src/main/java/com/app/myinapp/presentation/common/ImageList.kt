@@ -31,7 +31,7 @@ import com.app.myinapp.data.model.PhotoDTO
 @Composable
 fun SharedTransitionScope.ImageList(
     imageList: LazyPagingItems<PhotoDTO>,
-    onClick: (PhotoDTO) -> Unit,
+    onClick: (PhotoDTO,String) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
@@ -49,13 +49,13 @@ fun SharedTransitionScope.ImageList(
                     .height(300.dp)
                     .padding(4.dp)
                     .sharedElement(
-                        rememberSharedContentState(key = "${item.id}"),
+                        rememberSharedContentState(key = "${item.id}_${index}"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         zIndexInOverlay = 2F,
                     ),
                 onClick = {
                     imageList[index]?.let {
-                        onClick(item)
+                        onClick(item,index.toString())
 
                     }
                 }

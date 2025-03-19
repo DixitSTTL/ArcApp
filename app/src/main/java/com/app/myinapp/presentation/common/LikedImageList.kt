@@ -28,7 +28,7 @@ import com.app.myinapp.domain.model.Photo
 @Composable
 fun SharedTransitionScope.LikedImageList(
     imageList: LazyPagingItems<Photo>,
-    onClick: (Photo) -> Unit,
+    onClick: (Photo,String) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
@@ -46,13 +46,13 @@ fun SharedTransitionScope.LikedImageList(
                     .height(300.dp)
                     .padding(4.dp)
                     .sharedElement(
-                        rememberSharedContentState(key = "${item.imageId}"),
+                        rememberSharedContentState(key = "${item.imageId}_${index}"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         zIndexInOverlay = 2F,
                     ),
                 onClick = {
                     imageList[index]?.let {
-                        onClick(item)
+                        onClick(item,index.toString())
 
                     }
                 }
