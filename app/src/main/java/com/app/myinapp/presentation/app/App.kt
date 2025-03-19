@@ -60,7 +60,7 @@ class CustomNavType<T : Parcelable>(
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun App(viewModel:AppViewModel = koinViewModel()) {
+fun App(viewModel: AppViewModel = koinViewModel()) {
 
     val state by viewModel.state.collectAsState()
     val navController = rememberNavController()
@@ -91,7 +91,9 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
 
                 composable(
                     routes.IMAGE_PREVIEW_SCREEN.route,
-                    arguments = listOf(navArgument("Photo") { type = NavType.StringType },navArgument("Index") { type = NavType.StringType })
+                    arguments = listOf(
+                        navArgument("Photo") { type = NavType.StringType },
+                        navArgument("Index") { type = NavType.StringType })
                 ) { backStackEntry ->
                     BackHandler {
                         navController.popBackStack()
@@ -99,7 +101,7 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
 
                     backStackEntry.arguments?.let {
                         val dataJson = backStackEntry.arguments?.getString("Photo")
-                        val index = backStackEntry.arguments?.getString("Index")?:""
+                        val index = backStackEntry.arguments?.getString("Index") ?: ""
                         val data =
                             Gson().fromJson(dataJson, Photo::class.java) // Decode recipe JSON
 
@@ -118,25 +120,33 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
 
                 composable(
                     routes.CORE_IMAGE_PREVIEW_SCREEN.route,
-                    arguments = listOf(navArgument("Photo") { type = NavType.StringType },navArgument("Index") { type = NavType.StringType })
+                    arguments = listOf(
+                        navArgument("Photo") { type = NavType.StringType },
+                        navArgument("Index") { type = NavType.StringType })
                 ) { backStackEntry ->
                     BackHandler {
                         navController.popBackStack()
                     }
                     backStackEntry.arguments?.let {
                         val dataJson = backStackEntry.arguments?.getString("Photo")
-                        val index = backStackEntry.arguments?.getString("Index")?:""
+                        val index = backStackEntry.arguments?.getString("Index") ?: ""
                         val data =
                             Gson().fromJson(dataJson, Photo::class.java) // Decode recipe JSON
 
                         data?.let {
-                            CorePreviewScreen(navController, data, index, animatedVisibilityScope = this@composable)
+                            CorePreviewScreen(
+                                navController,
+                                data,
+                                index,
+                                animatedVisibilityScope = this@composable
+                            )
                         }
                     }
 
                 }
 
-                composable(routes.VIDEO_PREVIEW_SCREEN.route,
+                composable(
+                    routes.VIDEO_PREVIEW_SCREEN.route,
                     arguments = listOf(navArgument("Video") { type = NavType.StringType })
                 ) { backStackEntry ->
                     BackHandler {
@@ -184,6 +194,5 @@ fun App(viewModel:AppViewModel = koinViewModel()) {
 
         }
     }
-
 
 }

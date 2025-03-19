@@ -1,4 +1,4 @@
-package com.app.myinapp.presentation.common
+package com.app.myinapp.common
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -13,12 +13,18 @@ import com.app.myinapp.presentation.ui.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(onBackPress:()->Unit,title: String) {
+fun AppBar(onBackPress: () -> Unit, title: String) {
 
     CenterAlignedTopAppBar(
-        title = { Text(title, color = Theme.colors.onPrimaryContainer, style = Theme.typography.headline) },
+        title = {
+            Text(
+                title,
+                color = Theme.colors.onPrimaryContainer,
+                style = Theme.typography.headline
+            )
+        },
         navigationIcon = {
-            IconButton(onClick = {onBackPress()}) {
+            IconButton(onClick = { onBackPress() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "",

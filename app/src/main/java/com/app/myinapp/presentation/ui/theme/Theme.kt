@@ -43,27 +43,27 @@ data class Colors(
 )
 
 private val DarkColorScheme = Colors(
-    black =Color(0xFF000000),
-    white =Color(0xFFFFFFFF),
+    black = Color(0xFF000000),
+    white = Color(0xFFFFFFFF),
 
-    b_w =Color(0xFF000000),
-    b_w_reverse =Color(0xFFffffff),
+    b_w = Color(0xFF000000),
+    b_w_reverse = Color(0xFFffffff),
 
-    un_played =Color(0xFF3A3A3A),
-    played =Color(0x4AFFD700),
+    un_played = Color(0xFF3A3A3A),
+    played = Color(0x4AFFD700),
 
-    main_color =Color(0xFFFFD700),
-    main_red =Color(0xFF800000),
-    main_black =Color(0xFF080808),
+    main_color = Color(0xFFFFD700),
+    main_red = Color(0xFF800000),
+    main_black = Color(0xFF080808),
 
-    dialog_text =Color(0xFFffffff),
-    dialog_icon =Color(0xFFffffff),
+    dialog_text = Color(0xFFffffff),
+    dialog_icon = Color(0xFFffffff),
 
     tab_layout_bg = Color(0xFF080808),
 
-    light_blue_50 =Color(0xFFE1F5FE),
-    light_blue_200 =Color(0xFF81D4FA),
-    light_blue_600 =Color(0xFF039BE5),
+    light_blue_50 = Color(0xFFE1F5FE),
+    light_blue_200 = Color(0xFF81D4FA),
+    light_blue_600 = Color(0xFF039BE5),
     light_blue_900 = Color(0xFF01579B)
 
 )
@@ -166,27 +166,27 @@ private val _LightColorScheme = lightColorScheme(
 
 
 private val LightColorScheme = Colors(
-    black =Color(0xFF000000),
-    white =Color(0xFFFFFFFF),
+    black = Color(0xFF000000),
+    white = Color(0xFFFFFFFF),
 
-    b_w =Color(0xFFFFFFFF),
-    b_w_reverse =Color(0xFF000000),
+    b_w = Color(0xFFFFFFFF),
+    b_w_reverse = Color(0xFF000000),
 
-    un_played =Color(0xFF3A3A3A),
-    played =Color(0x4AFFD700),
+    un_played = Color(0xFF3A3A3A),
+    played = Color(0x4AFFD700),
 
-    main_color =Color(0xFFFFD700),
-    main_red =Color(0xFF9e0000),
-    main_black =Color(0xFF080808),
+    main_color = Color(0xFFFFD700),
+    main_red = Color(0xFF9e0000),
+    main_black = Color(0xFF080808),
 
-    dialog_text =Color(0xFF080808),
-    dialog_icon =Color(0xFFFFD700),
+    dialog_text = Color(0xFF080808),
+    dialog_icon = Color(0xFFFFD700),
 
     tab_layout_bg = Color(0xFFFFFFFF),
 
-    light_blue_50 =Color(0xFFE1F5FE),
-    light_blue_200 =Color(0xFF81D4FA),
-    light_blue_600 =Color(0xFF039BE5),
+    light_blue_50 = Color(0xFFE1F5FE),
+    light_blue_200 = Color(0xFF81D4FA),
+    light_blue_600 = Color(0xFF039BE5),
     light_blue_900 = Color(0xFF01579B)
 )
 private val localDimens = staticCompositionLocalOf { Dimens() }
@@ -215,6 +215,7 @@ object Theme {
         @ReadOnlyComposable
         get() = localDimens.current
 }
+
 @Composable
 fun MyInAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -257,12 +258,14 @@ fun MyInAppTheme(
         certificates = R.array.com_google_android_gms_fonts_certs
     )
 
-    val fontFamily = remember { FontFamily(
-        Font(
-            googleFont = GoogleFont("Zilla Slab"),
-            fontProvider = provider
+    val fontFamily = remember {
+        FontFamily(
+            Font(
+                googleFont = GoogleFont("Zilla Slab"),
+                fontProvider = provider
+            )
         )
-    ) }
+    }
     val typography = Typography(
         headlineLarge = headlineLarge(fontFamily),
         headline = headline(fontFamily),

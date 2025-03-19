@@ -10,8 +10,8 @@ object NetworkConstants {
         System.loadLibrary("securedata-lib")
     }
 
-    private external fun getBaseURL():String
-    private external fun getAPIKEY():String
+    private external fun getBaseURL(): String
+    private external fun getAPIKEY(): String
 
     val BASE_URL = getBaseURL()
 

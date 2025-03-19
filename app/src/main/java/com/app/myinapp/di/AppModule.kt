@@ -1,4 +1,4 @@
-package com.app.myinapp.presentation.di
+package com.app.myinapp.di
 
 import com.app.myinapp.data.utils.SharedPrefManager
 import com.app.myinapp.domain.room.DatabaseHelper

@@ -15,7 +15,7 @@ class SharedPrefManager(context: Context) {
     }
 
     fun getBoolean(key: String): Boolean {
-        return sharedPreferences.getBoolean(key,false)
+        return sharedPreferences.getBoolean(key, false)
     }
 
     fun setString(key: String, value: String?) {
@@ -27,7 +27,7 @@ class SharedPrefManager(context: Context) {
         return sharedPreferences.getString(key, null)
     }
 
-    fun getStringDefault(key: String,defaultValue:String): String? {
+    fun getStringDefault(key: String, defaultValue: String): String? {
         return sharedPreferences.getString(key, defaultValue)
     }
 

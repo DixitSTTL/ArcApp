@@ -7,8 +7,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 
-
-
 @Composable
 fun headlineLarge(fontFamily: FontFamily): TextStyle {
     return TextStyle(
@@ -18,6 +16,7 @@ fun headlineLarge(fontFamily: FontFamily): TextStyle {
         fontWeight = FontWeight.W600,
     )
 }
+
 @Composable
 fun headline(fontFamily: FontFamily): TextStyle {
     return TextStyle(
@@ -26,6 +25,7 @@ fun headline(fontFamily: FontFamily): TextStyle {
         fontWeight = FontWeight.W600,
     )
 }
+
 @Composable
 fun titleLarge(fontFamily: FontFamily): TextStyle {
     return TextStyle(
@@ -35,6 +35,7 @@ fun titleLarge(fontFamily: FontFamily): TextStyle {
         fontWeight = FontWeight.W600,
     )
 }
+
 @Composable
 fun title(fontFamily: FontFamily): TextStyle {
     return TextStyle(
@@ -43,6 +44,7 @@ fun title(fontFamily: FontFamily): TextStyle {
         fontWeight = FontWeight.W600,
     )
 }
+
 @Composable
 fun titleMedium(fontFamily: FontFamily): TextStyle {
     return TextStyle(
@@ -51,6 +53,7 @@ fun titleMedium(fontFamily: FontFamily): TextStyle {
         fontWeight = FontWeight.W400,
     )
 }
+
 @Composable
 fun body(fontFamily: FontFamily): TextStyle {
     return TextStyle(
@@ -60,6 +63,7 @@ fun body(fontFamily: FontFamily): TextStyle {
         fontWeight = FontWeight.W400,
     )
 }
+
 @Composable
 fun caption(fontFamily: FontFamily): TextStyle {
     return TextStyle(

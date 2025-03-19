@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-abstract class StateViewModel<S>(initialState:S) : ViewModel() {
+abstract class StateViewModel<S>(initialState: S) : ViewModel() {
 
     private var _state: MutableStateFlow<S> = MutableStateFlow(initialState)
     val state: StateFlow<S> = _state.asStateFlow()

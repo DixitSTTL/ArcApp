@@ -11,9 +11,10 @@ import com.app.myinapp.presentation.base.BaseViewModel
 class VideoScreenViewModel(
     private val data: VideoDTO,
     private val context: Application,
-    ) : BaseViewModel<VideoScreenState, VideoScreenInteract>(VideoScreenState()) {
+) : BaseViewModel<VideoScreenState, VideoScreenInteract>(VideoScreenState()) {
 
     val exoplayer = ExoPlayer.Builder(context).build()
+
     init {
         setMedia(data)
     }
@@ -32,7 +33,7 @@ class VideoScreenViewModel(
         exoplayer.apply {
             setMediaItems(mediaItems)
             prepare()
-            playWhenReady= true
+            playWhenReady = true
             addListener(object : Player.Listener {
                 override fun onEvents(player: Player, events: Player.Events) {
                     super.onEvents(player, events)

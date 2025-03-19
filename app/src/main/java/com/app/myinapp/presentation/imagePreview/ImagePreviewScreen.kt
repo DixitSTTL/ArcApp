@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.app.myinapp.R
-import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.domain.model.Photo
 import com.app.myinapp.presentation.imagePreview.composable.ActionButton
 import com.app.myinapp.presentation.routes.CORE_IMAGE_PREVIEW_SCREEN
@@ -67,6 +66,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
                 is ImagePreviewInteract.shareImage -> {
                     viewModel.shareImage()
                 }
+
                 is ImagePreviewInteract.likeWallpaper -> {
                     viewModel.likeWallpaper()
                 }
@@ -108,7 +108,12 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
                     IconButton(
                         onClick = {
-                            viewModel.sendAction(ImagePreviewInteract.navigateCoreImagePreview(data,index))
+                            viewModel.sendAction(
+                                ImagePreviewInteract.navigateCoreImagePreview(
+                                    data,
+                                    index
+                                )
+                            )
                         },
                         modifier = Modifier
                             .padding(22.dp)
@@ -146,7 +151,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
                     ActionButton(onclick = {
                         viewModel.sendAction(ImagePreviewInteract.likeWallpaper())
-                    }, icon = if (state.isLiked)R.drawable.ic_liked else R.drawable.ic_like)
+                    }, icon = if (state.isLiked) R.drawable.ic_liked else R.drawable.ic_like)
                 }
             }
         }

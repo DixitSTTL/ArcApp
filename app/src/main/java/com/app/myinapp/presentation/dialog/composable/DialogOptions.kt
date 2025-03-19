@@ -43,7 +43,8 @@ fun DialogOptions(onClick: () -> Unit, icon: Int, str: String) {
                 painter = painterResource(icon),
                 "",
                 tint = Theme.colors.onPrimaryContainer,
-                modifier = Modifier.width(26.dp))
+                modifier = Modifier.width(26.dp)
+            )
 
             Text(
                 text = str,

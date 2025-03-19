@@ -1,4 +1,4 @@
-package com.app.myinapp.presentation.common
+package com.app.myinapp.common
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -22,63 +22,73 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
-import com.app.myinapp.data.model.VideoDTO
-
+import com.app.myinapp.domain.model.Photo
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.VideoList(
-    videoDTOList: LazyPagingItems<VideoDTO>,
-    onClick: (VideoDTO) -> Unit,
+fun SharedTransitionScope.LikedImageList(
+    imageList: LazyPagingItems<Photo>,
+    onClick: (Photo, String) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
+
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize(),
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Fixed(3),
     ) {
-        items(videoDTOList.itemCount) { index ->
-            val item =
-                videoDTOList[index] ?: return@items // This ensures pagination works correctly
+        items(imageList.itemCount) { index ->
+            val item = imageList[index] ?: return@items // This ensures pagination works correctly
 
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(300.dp)
                     .padding(4.dp)
                     .sharedElement(
-                        rememberSharedContentState(key = "${item.id}"),
+                        rememberSharedContentState(key = "${item.imageId}_${index}"),
                         animatedVisibilityScope = animatedVisibilityScope,
+                        zIndexInOverlay = 2F,
                     ),
                 onClick = {
-                    onClick(item)
+                    imageList[index]?.let {
+                        onClick(item, index.toString())
+
+                    }
                 }
             ) {
 
                 AsyncImage(
-                    model = videoDTOList[index]?.image,
+                    model = imageList[index]?.portrait,
                     contentDescription = "",
                     modifier = Modifier
-                        .fillMaxSize()
-                        .height(200.dp),
+                        .fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
             }
-
         }
-
-        videoDTOList.apply {
+        imageList.apply {
             when {
                 loadState.refresh is LoadState.Loading -> {
                     item { CircularProgressIndicator(color = Color.Black) }
                 }
 
+//                loadState.refresh is LoadState.Error -> {
+//                    val error = moviePagingItems.loadState.refresh as LoadState.Error
+//                    item {
+//                        ErrorMessage(
+//                            modifier = Modifier.fillParentMaxSize(),
+//                            message = error.error.localizedMessage!!,
+//                            onClickRetry = { retry() })
+//                    }
+//                }
+//
                 loadState.append is LoadState.Loading -> {
                     item {
                         Box(
                             Modifier
                                 .fillMaxWidth()
-                                .height(200.dp),
+                                .height(300.dp),
                             contentAlignment = Alignment.Center
                         ) {
 
@@ -89,6 +99,16 @@ fun SharedTransitionScope.VideoList(
                         }
                     }
                 }
+//
+//                loadState.append is LoadState.Error -> {
+//                    val error = moviePagingItems.loadState.append as LoadState.Error
+//                    item {
+//                        ErrorMessage(
+//                            modifier = Modifier,
+//                            message = error.error.localizedMessage!!,
+//                            onClickRetry = { retry() })
+//                    }
+//                }
             }
         }
     }
