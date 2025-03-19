@@ -22,11 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.app.myinapp.presentation.routes
+import com.app.myinapp.presentation.search.composable.AppBar
 import com.app.myinapp.common.ImageList
 import com.app.myinapp.common.VideoList
-import com.app.myinapp.presentation.routes
 import com.app.myinapp.presentation.routes.VIDEO_PREVIEW_SCREEN
-import com.app.myinapp.presentation.search.composable.AppBar
 import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.gson.Gson
 import org.koin.androidx.compose.koinViewModel
@@ -64,13 +64,14 @@ fun SharedTransitionScope.SearchScreen(
 
                 is SearchScreenInteract.searchList -> {
                     keyboardController?.hide()
-                    if (state.query.isNotEmpty()) {
-                        if (searchType == "Images") {
-                            viewModel.fetchFlowSearchImage()
-                        } else {
-                            viewModel.fetchFlowSearchVideo()
-                        }
-                    } else {
+                    if (state.query.isNotEmpty()){
+                            if (searchType == "Images") {
+                                viewModel.fetchFlowSearchImage()
+                            } else {
+                                viewModel.fetchFlowSearchVideo()
+                            }
+                    }
+                    else{
                         snackBarHostState.showSnackbar("Please enter some text")
                     }
                 }
@@ -91,19 +92,16 @@ fun SharedTransitionScope.SearchScreen(
         snackbarHost = { SnackbarHost(hostState = snackBarHostState) }
 
     ) { it ->
-        Box(
-            Modifier
-                .padding(top = it.calculateTopPadding())
-                .background(color = Theme.colors.background)
-        ) {
+        Box(Modifier
+            .padding(top = it.calculateTopPadding())
+            .background(color = Theme.colors.background)) {
 
             if (searchType == "Images")
-                ImageList(stateImageFlow, onClick = { it, index ->
-                    viewModel.sendAction(SearchScreenInteract.navigateImagePreview(it, index))
+                ImageList(stateImageFlow, onClick = {it,index->
+                    viewModel.sendAction(SearchScreenInteract.navigateImagePreview(it,index))
                 }, animatedVisibilityScope)
             else
-                VideoList(stateVideoFlow, {
-                    it
+                VideoList(stateVideoFlow,{it
                     viewModel.sendAction(SearchScreenInteract.navigateVideoPreview(it))
                 }, animatedVisibilityScope)
         }

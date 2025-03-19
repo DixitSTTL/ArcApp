@@ -10,9 +10,11 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -25,12 +27,14 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.AspectRatioFrameLayout
+import androidx.media3.ui.PlayerControlView
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavHostController
 import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.delay
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -48,7 +52,7 @@ fun SharedTransitionScope.VideoPreviewScreen(
     val systemUiController: SystemUiController = rememberSystemUiController()
     // Initialize ExoPlayer
     val state by viewModel.state.collectAsState()
-    val exoPlayer = remember { viewModel.exoplayer }
+        val exoPlayer = remember { viewModel.exoplayer }
     systemUiController.isSystemBarsVisible = state.isVisible
     systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_BARS_BY_SWIPE
 
@@ -67,27 +71,23 @@ fun SharedTransitionScope.VideoPreviewScreen(
                 Lifecycle.Event.ON_RESUME -> {
                     if (!exoPlayer.isPlaying)
 //                    exoPlayer.play()
-                        Log.d("LifecycleAwareComponent", "ON_RESUME triggered")
+                    Log.d("LifecycleAwareComponent", "ON_RESUME triggered")
                     // Handle onResume logic here
                 }
-
                 Lifecycle.Event.ON_PAUSE -> {
                     if (exoPlayer.isPlaying)
-                        exoPlayer.pause()
+                    exoPlayer.pause()
                     Log.d("LifecycleAwareComponent", "ON_PAUSE triggered")
                     // Handle onPause logic here
                 }
-
                 Lifecycle.Event.ON_STOP -> {
                     Log.d("LifecycleAwareComponent", "ON_STOP triggered")
                     // Handle onStop logic here
                 }
-
                 Lifecycle.Event.ON_DESTROY -> {
                     Log.d("LifecycleAwareComponent", "ON_DESTROY triggered")
                     // Handle onStop logic here
                 }
-
                 else -> {}
             }
         }

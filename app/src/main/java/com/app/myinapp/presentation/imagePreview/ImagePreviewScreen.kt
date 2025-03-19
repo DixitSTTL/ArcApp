@@ -66,7 +66,6 @@ fun SharedTransitionScope.ImagePreviewScreen(
                 is ImagePreviewInteract.shareImage -> {
                     viewModel.shareImage()
                 }
-
                 is ImagePreviewInteract.likeWallpaper -> {
                     viewModel.likeWallpaper()
                 }
@@ -108,12 +107,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
                     IconButton(
                         onClick = {
-                            viewModel.sendAction(
-                                ImagePreviewInteract.navigateCoreImagePreview(
-                                    data,
-                                    index
-                                )
-                            )
+                            viewModel.sendAction(ImagePreviewInteract.navigateCoreImagePreview(data,index))
                         },
                         modifier = Modifier
                             .padding(22.dp)
@@ -151,7 +145,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
                     ActionButton(onclick = {
                         viewModel.sendAction(ImagePreviewInteract.likeWallpaper())
-                    }, icon = if (state.isLiked) R.drawable.ic_liked else R.drawable.ic_like)
+                    }, icon = if (state.isLiked)R.drawable.ic_liked else R.drawable.ic_like)
                 }
             }
         }
