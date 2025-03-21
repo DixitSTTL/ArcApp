@@ -48,9 +48,13 @@ fun SettingScreen(
 
     Scaffold(
         topBar = {
-            AppBar({
-                navController.popBackStack()
-            }, "Setting")
+            AppBar(
+                onBackPress = {
+                    navController.popBackStack()
+                }, title = "Setting",
+                tintColor = Theme.colors.onPrimaryContainer,
+                containerColor = Theme.colors.primaryContainer,
+                menuItems = {})
         }
     ) { it ->
         Box(
@@ -75,7 +79,7 @@ fun SettingScreen(
                         style = Theme.typography.body
                     )
                     Switch(
-                        checked = state.isDynamicUi,
+                        checked = state.data.isDynamicUi,
                         colors = SwitchDefaults.colors(
                             checkedTrackColor = Theme.colors.onPrimaryContainer,
                             checkedThumbColor = Theme.colors.primaryContainer,
@@ -99,7 +103,7 @@ fun SettingScreen(
 
                     )
                     Switch(
-                        checked = state.isDarkMode,
+                        checked = state.data.isDarkMode,
                         colors = SwitchDefaults.colors(
                             checkedTrackColor = Theme.colors.onPrimaryContainer,
                             checkedThumbColor = Theme.colors.primaryContainer,

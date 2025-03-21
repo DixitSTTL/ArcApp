@@ -71,7 +71,7 @@ class ImagePreviewRepositoryImpl(
 
     override suspend fun downloadWallpaper(photoDTO: Photo) {
         val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.UNMETERED)
+//            .setRequiredNetworkType(NetworkType.UNMETERED)
             .build()
         val data = workDataOf("image_url" to photoDTO.original)
         val firstRequest: OneTimeWorkRequest =

@@ -20,7 +20,7 @@ class SettingScreenViewModel(
     private fun fetchUiTheme() {
         viewModelScope.launch(Dispatchers.IO) {
             useCaseTheme.getUiTheme().collectLatest {it->
-                setDataState(state.value.copy(isDynamicUi = it))
+                setDataState(getStateData().copy(isDynamicUi = it))
             }
         }
     }
@@ -28,7 +28,7 @@ class SettingScreenViewModel(
     private fun fetchDynamicTheme() {
         viewModelScope.launch(Dispatchers.IO) {
             useCaseTheme.getDynamicTheme().collectLatest {it->
-                setDataState(state.value.copy(isDarkMode = it))
+                setDataState(getStateData().copy(isDarkMode = it))
             }
         }
     }

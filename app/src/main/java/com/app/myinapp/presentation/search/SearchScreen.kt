@@ -41,8 +41,8 @@ fun SharedTransitionScope.SearchScreen(
 ) {
 
     val state by viewModel.state.collectAsState()
-    val stateImageFlow = state.imageFlowList.collectAsLazyPagingItems()
-    val stateVideoFlow = state.videoDTOFlowList.collectAsLazyPagingItems()
+    val stateImageFlow = state.data.imageFlowList.collectAsLazyPagingItems()
+    val stateVideoFlow = state.data.videoDTOFlowList.collectAsLazyPagingItems()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -64,7 +64,7 @@ fun SharedTransitionScope.SearchScreen(
 
                 is SearchScreenInteract.searchList -> {
                     keyboardController?.hide()
-                    if (state.query.isNotEmpty()){
+                    if (state.data.query.isNotEmpty()){
                             if (searchType == "Images") {
                                 viewModel.fetchFlowSearchImage()
                             } else {
@@ -83,7 +83,7 @@ fun SharedTransitionScope.SearchScreen(
         topBar = {
             AppBar(
                 scrollBehavior,
-                state,
+                state.data,
                 { navController.popBackStack() },
                 viewModel::sendAction,
                 viewModel::setDataState

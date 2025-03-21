@@ -25,7 +25,7 @@ class ImagePreviewViewModel(
 
     fun likeWallpaper() {
         viewModelScope.launch(Dispatchers.IO) {
-            if (state.value.isLiked){
+            if (getStateData().isLiked){
                 useCaseImagePreviewScreen.disLikeWallpaper(photo)
             }else{
                 useCaseImagePreviewScreen.likeWallpaper(photo)
@@ -37,10 +37,10 @@ class ImagePreviewViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             useCaseImagePreviewScreen.checkLiked(photo).collectLatest {it->
                 if (it==null){
-                    setDataState(state.value.copy(isLiked = false))
+                    setDataState(getStateData().copy(isLiked = false))
                 }
                 else{
-                    setDataState(state.value.copy(isLiked = true))
+                    setDataState(getStateData().copy(isLiked = true))
                 }
             }
         }

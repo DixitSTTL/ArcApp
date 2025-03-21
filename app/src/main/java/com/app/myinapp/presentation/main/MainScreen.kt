@@ -12,30 +12,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myinapp.common.ImageList
 import com.app.myinapp.common.LikedImageList
+import com.app.myinapp.common.TabBar
 import com.app.myinapp.common.VideoList
 import com.app.myinapp.presentation.main.composable.AppBar
 import com.app.myinapp.presentation.routes
@@ -44,7 +36,7 @@ import com.app.myinapp.presentation.routes.SEARCH_SCREEN
 import com.app.myinapp.presentation.routes.VIDEO_PREVIEW_SCREEN
 import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.gson.Gson
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
@@ -58,16 +50,15 @@ fun SharedTransitionScope.MainScreen(
     val pagerState = rememberPagerState(pageCount = { 3 })
     val titles = listOf("Images", "Videos", "Liked")
     val state by viewModel.state.collectAsState()
-    val stateImageFlow = state.imageFlowList.collectAsLazyPagingItems()
-    val stateVideoFlow = state.videoDTOFlowList.collectAsLazyPagingItems()
-    val stateLikedImageFlow = state.likedImageFlowList.collectAsLazyPagingItems()
-    val coroutineScope = rememberCoroutineScope()
+    val stateImageFlow = state.data.imageFlowList.collectAsLazyPagingItems()
+    val stateVideoFlow = state.data.videoDTOFlowList.collectAsLazyPagingItems()
+    val stateLikedImageFlow = state.data.likedImageFlowList.collectAsLazyPagingItems()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
 
 
     LaunchedEffect(Unit) {
-        viewModel.uiAction.collect {
+        viewModel.uiAction.collectLatest {
             when (it) {
                 is MainScreenInteract.navigateImagePreview -> {
                     val data = Uri.encode(Gson().toJson(it.data))
@@ -116,50 +107,7 @@ fun SharedTransitionScope.MainScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                TabRow(
-                    selectedTabIndex = pagerState.currentPage,
-                    divider = {
-
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    indicator = {
-                        SecondaryIndicator(
-                            modifier = Modifier
-                                .clip(
-                                    shape = RoundedCornerShape(
-                                        topEnd = 20.dp,
-                                        topStart = 20.dp
-                                    )
-                                )
-                                .tabIndicatorOffset(it[pagerState.currentPage]),
-                            height = 3.dp,
-                            color = Theme.colors.secondary
-                        )
-                    },
-                    containerColor = Theme.colors.onSecondary,
-                    contentColor = Color.Black,
-                ) {
-
-                    titles.forEachIndexed { index, title ->
-                        Tab(
-                            text = {
-                                Text(
-                                    text = title,
-                                    color = Theme.colors.secondary,
-                                    style = Theme.typography.titleMedium
-                                )
-
-                            },
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            },
-                        )
-                    }
-                }
+                TabBar(pagerState,titles)
 
                 HorizontalPager(
                     state = pagerState,
@@ -183,8 +131,7 @@ fun SharedTransitionScope.MainScreen(
                         }
 
                         1 -> {
-                            VideoList(stateVideoFlow, onClick = {
-                                it
+                            VideoList(stateVideoFlow, onClick = {it
                                 viewModel.sendAction(MainScreenInteract.navigateVideoPreview(it))
                             }, animatedVisibilityScope)
                         }

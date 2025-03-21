@@ -145,7 +145,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
                     ActionButton(onclick = {
                         viewModel.sendAction(ImagePreviewInteract.likeWallpaper())
-                    }, icon = if (state.isLiked)R.drawable.ic_liked else R.drawable.ic_like)
+                    }, icon = if (state.data.isLiked)R.drawable.ic_liked else R.drawable.ic_like)
                 }
             }
         }

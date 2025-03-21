@@ -9,17 +9,18 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.app.myinapp.presentation.ui.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBar(onBackPress: () -> Unit, title: String) {
+fun AppBar(onBackPress: () -> Unit, title: String, tintColor: Color, containerColor: Color, menuItems:@Composable () -> Unit) {
 
     CenterAlignedTopAppBar(
         title = {
             Text(
                 title,
-                color = Theme.colors.onPrimaryContainer,
+                color = tintColor,
                 style = Theme.typography.headline
             )
         },
@@ -28,14 +29,15 @@ fun AppBar(onBackPress: () -> Unit, title: String) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "",
-                    tint = Theme.colors.onPrimaryContainer
+                    tint = tintColor
                 )
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = Theme.colors.primaryContainer,
+            containerColor = containerColor,
             scrolledContainerColor = Theme.colors.primaryContainer,
-        )
+        ),
+        actions = {menuItems()}
 
     )
 }

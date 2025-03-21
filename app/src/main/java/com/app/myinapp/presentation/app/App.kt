@@ -65,7 +65,7 @@ fun App(viewModel: AppViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     val navController = rememberNavController()
 
-    MyInAppTheme(dynamicColor = state.isDynamicUi, darkTheme = state.isDarkMode) {
+    MyInAppTheme(dynamicColor = state.data.isDynamicUi, darkTheme = state.data.isDarkMode) {
 
         SharedTransitionLayout() {
             NavHost(navController = navController, startDestination = routes.MAIN_SCREEN) {

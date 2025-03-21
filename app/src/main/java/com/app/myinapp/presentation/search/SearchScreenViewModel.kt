@@ -12,19 +12,19 @@ class SearchScreenViewModel(
 
     fun fetchFlowSearchImage() {
         viewModelScope.launch {
-            setDataState(state.value.copy(isLoading = true))
+            setDataState(getStateData().copy(isLoading = true))
             val responseFlow =
-                useCaseSearchScreen.fetchFlowSearchImage(state.value.query).cachedIn(viewModelScope)
-            setDataState(state.value.copy(isLoading = false, imageFlowList = responseFlow))
+                useCaseSearchScreen.fetchFlowSearchImage(getStateData().query).cachedIn(viewModelScope)
+            setDataState(getStateData().copy(isLoading = false, imageFlowList = responseFlow))
         }
     }
 
     fun fetchFlowSearchVideo() {
         viewModelScope.launch {
-            setDataState(state.value.copy(isLoading = true))
+            setDataState(getStateData().copy(isLoading = true))
             val responseFlow =
-                useCaseSearchScreen.fetchFlowSearchVideo(state.value.query).cachedIn(viewModelScope)
-            setDataState(state.value.copy(isLoading = false, videoDTOFlowList = responseFlow))
+                useCaseSearchScreen.fetchFlowSearchVideo(getStateData().query).cachedIn(viewModelScope)
+            setDataState(getStateData().copy(isLoading = false, videoDTOFlowList = responseFlow))
         }
     }
 }
