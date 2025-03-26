@@ -22,7 +22,11 @@ fun AppBar(
 
     LargeTopAppBar(
         title = {
-            Text("WallpaperS", color = Theme.colors.onPrimaryContainer, style = Theme.typography.headlineLarge)
+            Text(
+                "WallpaperS",
+                color = Theme.colors.onPrimaryContainer,
+                style = Theme.typography.headlineLarge
+            )
         },
         scrollBehavior = scrollBehavior,
         actions = {

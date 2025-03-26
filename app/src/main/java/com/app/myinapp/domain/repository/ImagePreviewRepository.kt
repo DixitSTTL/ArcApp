@@ -8,7 +8,9 @@ interface ImagePreviewRepository {
     suspend fun shareImage(photoDTO: Photo)
     suspend fun setWallpaper(
         photoDTO: Photo,
-        type: WallpaperType)
+        type: WallpaperType
+    )
+
     suspend fun downloadWallpaper(photoDTO: Photo)
     suspend fun likeWallpaper(photoDTO: Photo)
     suspend fun disLikeWallpaper(photoDTO: Photo)

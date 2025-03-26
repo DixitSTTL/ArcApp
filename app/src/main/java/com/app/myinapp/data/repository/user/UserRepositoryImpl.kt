@@ -16,11 +16,12 @@ class UserRepositoryImpl(
 
         Log.d("TAG", "IsDynamicTheme: ${key} ")
 
-        when(key){
-            "IsDynamicTheme"->{
+        when (key) {
+            "IsDynamicTheme" -> {
                 isDynamic.value = sharedPrefManager.getBoolean(key)
             }
-            "UiTheme"->{
+
+            "UiTheme" -> {
                 isDarkMode.value = sharedPrefManager.getBoolean(key)
             }
 
@@ -30,6 +31,7 @@ class UserRepositoryImpl(
     init {
         sharedPrefManager.sharedPreferences.registerOnSharedPreferenceChangeListener(listener)
     }
+
     override suspend fun updateIsDynamicTheme(boolean: Boolean) {
         sharedPrefManager.setBoolean("IsDynamicTheme", boolean)
     }

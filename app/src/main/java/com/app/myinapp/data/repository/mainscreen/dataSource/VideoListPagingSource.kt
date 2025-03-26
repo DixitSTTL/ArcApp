@@ -6,7 +6,8 @@ import androidx.paging.PagingState
 import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.data.network.NetworkClient
 
-class VideoListPagingSource(private val networkClient: NetworkClient) : PagingSource<Int, VideoDTO>() {
+class VideoListPagingSource(private val networkClient: NetworkClient) :
+    PagingSource<Int, VideoDTO>() {
     override fun getRefreshKey(state: PagingState<Int, VideoDTO>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)

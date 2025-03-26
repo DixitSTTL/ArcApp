@@ -57,21 +57,21 @@ fun OptionDialog(
             DialogOptions(icon = R.drawable.ic_image, str = "Set Dashboard", onClick = {
                 viewModel.sendAction(
                     ImagePreviewInteract.setWallpaper(
-                         WallpaperType.DASHBOARDSCREEN
+                        WallpaperType.DASHBOARDSCREEN
                     )
                 )
             })
             DialogOptions(icon = R.drawable.ic_lock, str = "Set lock screen", onClick = {
                 viewModel.sendAction(
                     ImagePreviewInteract.setWallpaper(
-                         WallpaperType.LOCKSCREEN
+                        WallpaperType.LOCKSCREEN
                     )
                 )
             })
             DialogOptions(icon = R.drawable.ic_both, str = "Set Both", onClick = {
                 viewModel.sendAction(
                     ImagePreviewInteract.setWallpaper(
-                         WallpaperType.BOTHSCREEN
+                        WallpaperType.BOTHSCREEN
                     )
                 )
             })

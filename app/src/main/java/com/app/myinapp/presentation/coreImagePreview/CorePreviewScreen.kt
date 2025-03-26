@@ -29,11 +29,12 @@ import com.app.myinapp.presentation.ui.theme.Theme
 fun SharedTransitionScope.CorePreviewScreen(
     navController: NavHostController,
     data: Photo,
+    index: String,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     Scaffold { padding ->
 
-        PinchToZoomView(Modifier, data, animatedVisibilityScope)
+        PinchToZoomView(Modifier, data, index, animatedVisibilityScope)
     }
 
 }
@@ -43,6 +44,7 @@ fun SharedTransitionScope.CorePreviewScreen(
 fun SharedTransitionScope.PinchToZoomView(
     modifier: Modifier,
     data: Photo,
+    index: String,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     // Mutable state variables to hold scale and offset values
@@ -124,7 +126,7 @@ fun SharedTransitionScope.PinchToZoomView(
             modifier = Modifier
                 .fillMaxSize()
                 .sharedElement(
-                    rememberSharedContentState(key = "${data.imageId}"),
+                    rememberSharedContentState(key = "${data.imageId}_${index}"),
                     animatedVisibilityScope = animatedVisibilityScope,
                 ),
             contentScale = ContentScale.FillWidth

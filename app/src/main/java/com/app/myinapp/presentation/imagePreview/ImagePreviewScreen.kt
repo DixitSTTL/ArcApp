@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import com.app.myinapp.R
-import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.domain.model.Photo
 import com.app.myinapp.presentation.imagePreview.composable.ActionButton
 import com.app.myinapp.presentation.routes.CORE_IMAGE_PREVIEW_SCREEN
@@ -45,6 +44,7 @@ import org.koin.core.parameter.parametersOf
 fun SharedTransitionScope.ImagePreviewScreen(
     navController: NavHostController,
     data: Photo,
+    index: String,
     animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: ImagePreviewViewModel = koinViewModel(parameters = { parametersOf(data) })
 ) {
@@ -55,7 +55,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
             when (it) {
                 is ImagePreviewInteract.navigateCoreImagePreview -> {
                     val data = Uri.encode(Gson().toJson(it.data))
-                    navController.navigate("${CORE_IMAGE_PREVIEW_SCREEN}/${data}")
+                    navController.navigate("${CORE_IMAGE_PREVIEW_SCREEN}/${data}/${index}")
                 }
 
                 is ImagePreviewInteract.navigateDialog -> {
@@ -90,7 +90,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
                             .fillMaxSize()
                             .padding(10.dp)
                             .sharedElement(
-                                rememberSharedContentState(key = "${data.imageId}"),
+                                rememberSharedContentState(key = "${data.imageId}_${index}"),
                                 animatedVisibilityScope = animatedVisibilityScope,
                                 zIndexInOverlay = 2F,
                             )
@@ -107,7 +107,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
                     IconButton(
                         onClick = {
-                            viewModel.sendAction(ImagePreviewInteract.navigateCoreImagePreview(data))
+                            viewModel.sendAction(ImagePreviewInteract.navigateCoreImagePreview(data,index))
                         },
                         modifier = Modifier
                             .padding(22.dp)
@@ -145,7 +145,7 @@ fun SharedTransitionScope.ImagePreviewScreen(
 
                     ActionButton(onclick = {
                         viewModel.sendAction(ImagePreviewInteract.likeWallpaper())
-                    }, icon = if (state.isLiked)R.drawable.ic_liked else R.drawable.ic_like)
+                    }, icon = if (state.data.isLiked)R.drawable.ic_liked else R.drawable.ic_like)
                 }
             }
         }

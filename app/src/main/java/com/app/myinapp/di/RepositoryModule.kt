@@ -1,4 +1,4 @@
-package com.app.myinapp.presentation.di
+package com.app.myinapp.di
 
 import com.app.myinapp.data.repository.imagePreview.ImagePreviewRepositoryImpl
 import com.app.myinapp.data.repository.mainscreen.MainScreenRepositoryImpl
@@ -19,7 +19,7 @@ val RepositoryModule = module {
     single<UserRepository> { UserRepositoryImpl(get()) }
     single<MainScreenRepository> { MainScreenRepositoryImpl(get(), get(), get(), get()) }
     single<SearchScreenRepository> { SearchScreenRepositoryImpl(get()) }
-    single<ImagePreviewRepository> { ImagePreviewRepositoryImpl(get(),get()) }
+    single<ImagePreviewRepository> { ImagePreviewRepositoryImpl(get(), get()) }
     single<SettingScreenRepository> { SettingScreenRepositoryImpl(get()) }
     factory { ImageListPagingSource(get()) }
     factory { VideoListPagingSource(get()) }

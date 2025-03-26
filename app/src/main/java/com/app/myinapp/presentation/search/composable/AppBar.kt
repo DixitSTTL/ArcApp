@@ -70,11 +70,11 @@ fun AppBar(
                 }),
                 textStyle = Theme.typography.titleMedium,
 
-            )
+                )
         },
         scrollBehavior = scrollBehavior,
         navigationIcon = {
-            IconButton(onClick = {onBackPress()}) {
+            IconButton(onClick = { onBackPress() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "",
@@ -84,11 +84,16 @@ fun AppBar(
         },
         actions = {
             IconButton(onClick = { uiAction(SearchScreenInteract.searchList()) }) {
-                Icon(painterResource(R.drawable.ic_search), "", tint = Theme.colors.onPrimaryContainer)
+                Icon(
+                    painterResource(R.drawable.ic_search),
+                    "",
+                    tint = Theme.colors.onPrimaryContainer
+                )
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Theme.colors.primaryContainer
-        ))
+        )
+    )
 
 }

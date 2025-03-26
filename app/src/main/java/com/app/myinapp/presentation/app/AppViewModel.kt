@@ -18,9 +18,9 @@ class AppViewModel(
 
     private fun fetchUiTheme() {
         viewModelScope.launch {
-            useCaseTheme.getUiTheme().collectLatest {it->
+            useCaseTheme.getUiTheme().collectLatest { it ->
 
-                setDataState(state.value.copy(isDynamicUi = it))
+                setDataState(getStateData().copy(isDynamicUi = it))
             }
 
         }
@@ -28,8 +28,8 @@ class AppViewModel(
 
     private fun fetchDynamicTheme() {
         viewModelScope.launch {
-            useCaseTheme.getDynamicTheme().collectLatest {it->
-                setDataState(state.value.copy(isDarkMode = it))
+            useCaseTheme.getDynamicTheme().collectLatest { it ->
+                setDataState(getStateData().copy(isDarkMode = it))
             }
         }
     }

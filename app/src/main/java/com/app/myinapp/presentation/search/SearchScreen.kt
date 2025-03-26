@@ -24,8 +24,8 @@ import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.app.myinapp.presentation.routes
 import com.app.myinapp.presentation.search.composable.AppBar
-import com.app.myinapp.presentation.common.ImageList
-import com.app.myinapp.presentation.common.VideoList
+import com.app.myinapp.common.ImageList
+import com.app.myinapp.common.VideoList
 import com.app.myinapp.presentation.routes.VIDEO_PREVIEW_SCREEN
 import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.gson.Gson
@@ -41,8 +41,8 @@ fun SharedTransitionScope.SearchScreen(
 ) {
 
     val state by viewModel.state.collectAsState()
-    val stateImageFlow = state.imageFlowList.collectAsLazyPagingItems()
-    val stateVideoFlow = state.videoDTOFlowList.collectAsLazyPagingItems()
+    val stateImageFlow = state.data.imageFlowList.collectAsLazyPagingItems()
+    val stateVideoFlow = state.data.videoDTOFlowList.collectAsLazyPagingItems()
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -54,7 +54,7 @@ fun SharedTransitionScope.SearchScreen(
             when (it) {
                 is SearchScreenInteract.navigateImagePreview -> {
                     val data = Uri.encode(Gson().toJson(it.data.toPhoto()))
-                    navController.navigate("${routes.IMAGE_PREVIEW_SCREEN}/${data}")
+                    navController.navigate("${routes.IMAGE_PREVIEW_SCREEN}/${data}/${it.index}")
                 }
 
                 is SearchScreenInteract.navigateVideoPreview -> {
@@ -64,7 +64,7 @@ fun SharedTransitionScope.SearchScreen(
 
                 is SearchScreenInteract.searchList -> {
                     keyboardController?.hide()
-                    if (state.query.isNotEmpty()){
+                    if (state.data.query.isNotEmpty()){
                             if (searchType == "Images") {
                                 viewModel.fetchFlowSearchImage()
                             } else {
@@ -83,7 +83,7 @@ fun SharedTransitionScope.SearchScreen(
         topBar = {
             AppBar(
                 scrollBehavior,
-                state,
+                state.data,
                 { navController.popBackStack() },
                 viewModel::sendAction,
                 viewModel::setDataState
@@ -97,8 +97,8 @@ fun SharedTransitionScope.SearchScreen(
             .background(color = Theme.colors.background)) {
 
             if (searchType == "Images")
-                ImageList(stateImageFlow, onClick = {it
-                    viewModel.sendAction(SearchScreenInteract.navigateImagePreview(it))
+                ImageList(stateImageFlow, onClick = {it,index->
+                    viewModel.sendAction(SearchScreenInteract.navigateImagePreview(it,index))
                 }, animatedVisibilityScope)
             else
                 VideoList(stateVideoFlow,{it

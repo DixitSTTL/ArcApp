@@ -6,7 +6,8 @@ import androidx.paging.PagingState
 import com.app.myinapp.data.model.PhotoDTO
 import com.app.myinapp.data.network.NetworkClient
 
-class ImageListPagingSource(private val networkClient: NetworkClient) : PagingSource<Int, PhotoDTO>() {
+class ImageListPagingSource(private val networkClient: NetworkClient) :
+    PagingSource<Int, PhotoDTO>() {
     override fun getRefreshKey(state: PagingState<Int, PhotoDTO>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)

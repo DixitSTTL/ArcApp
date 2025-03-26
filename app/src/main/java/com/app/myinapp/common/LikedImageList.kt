@@ -1,4 +1,4 @@
-package com.app.myinapp.presentation.common
+package com.app.myinapp.common
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -28,7 +28,7 @@ import com.app.myinapp.domain.model.Photo
 @Composable
 fun SharedTransitionScope.LikedImageList(
     imageList: LazyPagingItems<Photo>,
-    onClick: (Photo) -> Unit,
+    onClick: (Photo, String) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
 
@@ -38,25 +38,25 @@ fun SharedTransitionScope.LikedImageList(
         columns = GridCells.Fixed(3),
     ) {
         items(imageList.itemCount) { index ->
-            val item = imageList[index]?:return@items // This ensures pagination works correctly
+            val item = imageList[index] ?: return@items // This ensures pagination works correctly
 
-            Card (
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
                     .padding(4.dp)
                     .sharedElement(
-                        rememberSharedContentState(key = "${item.imageId}"),
+                        rememberSharedContentState(key = "${item.imageId}_${index}"),
                         animatedVisibilityScope = animatedVisibilityScope,
                         zIndexInOverlay = 2F,
                     ),
                 onClick = {
                     imageList[index]?.let {
-                        onClick(item)
+                        onClick(item, index.toString())
 
                     }
                 }
-            ){
+            ) {
 
                 AsyncImage(
                     model = imageList[index]?.portrait,

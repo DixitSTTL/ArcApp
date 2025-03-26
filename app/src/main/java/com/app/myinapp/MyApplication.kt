@@ -1,7 +1,7 @@
 package com.app.myinapp
 
 import android.app.Application
-import com.app.myinapp.presentation.di.AppModule
+import com.app.myinapp.di.AppModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 

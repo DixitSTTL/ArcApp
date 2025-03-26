@@ -35,6 +35,7 @@ class FirstWorker(appContext: Context, workerParams: WorkerParameters) :
             Result.retry()
         }
     }
+
     private fun downloadImage(url: String): Bitmap {
         val connection = URL(url).openConnection() as HttpURLConnection
         connection.connect()

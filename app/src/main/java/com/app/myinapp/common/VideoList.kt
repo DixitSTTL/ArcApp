@@ -1,4 +1,4 @@
-package com.app.myinapp.presentation.common
+package com.app.myinapp.common
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi

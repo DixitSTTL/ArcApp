@@ -42,8 +42,8 @@ data class PhotoDTO(
     val url: String,
     @SerialName("width")
     val width: Int
-){
-    fun toPhoto()=Photo(
+) {
+    fun toPhoto() = Photo(
         0,
         this.id,
         this.src.original,
