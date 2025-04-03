@@ -1,5 +1,6 @@
 package com.app.myinapp.di
 
+import com.app.myinapp.domain.usecase.UseCaseDownloadFile
 import com.app.myinapp.domain.usecase.UseCaseImagePreviewScreen
 import com.app.myinapp.domain.usecase.UseCaseMainScreen
 import com.app.myinapp.domain.usecase.UseCaseSearchScreen
@@ -14,5 +15,6 @@ val UseCaseModule = module {
     single { UseCaseSearchScreen(get()) }
     single { UseCaseImagePreviewScreen(get()) }
     single { UseCaseSettingScreen(get()) }
+    single { UseCaseDownloadFile(get()) }
 
 }

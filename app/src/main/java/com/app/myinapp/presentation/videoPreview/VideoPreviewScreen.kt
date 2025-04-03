@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -37,6 +38,7 @@ import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.presentation.ui.theme.Theme
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -58,6 +60,17 @@ fun SharedTransitionScope.VideoPreviewScreen(
     systemUiController.isSystemBarsVisible = state.data.isVisible
     systemUiController.systemBarsBehavior = BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
+    LaunchedEffect(Unit) {
+        viewModel.uiAction.collectLatest {
+            when (it) {
+                is VideoScreenInteract.downloadVideo -> {
+                    viewModel.downloadVideo(it.data)
+                }
+
+                is VideoScreenInteract.update -> TODO()
+            }
+        }
+    }
 
     DisposableEffect(key1 = data) {
         onDispose {
@@ -116,7 +129,10 @@ fun SharedTransitionScope.VideoPreviewScreen(
                     tintColor = Theme.colors.onBackground,
                     containerColor = Color.Transparent,
                     menuItems = {
-                        IconButton({}) {
+                        IconButton(
+                            onClick = {
+                                viewModel.sendAction(VideoScreenInteract.downloadVideo(data))
+                            }) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_download),
                                 contentDescription = "download_video",

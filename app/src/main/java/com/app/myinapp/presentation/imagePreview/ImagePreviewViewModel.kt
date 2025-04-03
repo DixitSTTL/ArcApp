@@ -2,6 +2,7 @@ package com.app.myinapp.presentation.imagePreview
 
 import androidx.lifecycle.viewModelScope
 import com.app.myinapp.domain.model.Photo
+import com.app.myinapp.domain.usecase.UseCaseDownloadFile
 import com.app.myinapp.domain.usecase.UseCaseImagePreviewScreen
 import com.app.myinapp.presentation.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
@@ -10,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class ImagePreviewViewModel(
     private val useCaseImagePreviewScreen: UseCaseImagePreviewScreen,
+    private val useCaseDownloadFile: UseCaseDownloadFile,
     private val photo: Photo
 ) : BaseViewModel<ImagePreviewState, ImagePreviewInteract>(ImagePreviewState()) {
 
@@ -56,7 +58,10 @@ class ImagePreviewViewModel(
 
     fun downloadWallpaper() {
         viewModelScope.launch(Dispatchers.IO) {
-            useCaseImagePreviewScreen.downloadImage(photo)
+            useCaseDownloadFile.downloadFile(
+                url = photo.original,
+                type = "JPG",
+                name = "WallpaperS_${System.currentTimeMillis()}")
             sendAction(ImagePreviewInteract.dismissDialog()) // Move dialog dismissal here
         }
     }

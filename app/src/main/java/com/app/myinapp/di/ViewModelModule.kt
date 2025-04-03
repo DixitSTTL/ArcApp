@@ -15,9 +15,9 @@ val ViewModelModule = module {
 
     viewModel { MainScreenViewModel(get(), get()) }
     viewModel { SearchScreenViewModel(get()) }
-    viewModel { (photo: Photo) -> ImagePreviewViewModel(get(), get()) }
+    viewModel { (photo: Photo) -> ImagePreviewViewModel(get(), get(), get()) }
     viewModel { SettingScreenViewModel(get()) }
-    viewModel { (video: VideoDTO) -> VideoScreenViewModel(video, get()) }
+    viewModel { (video: VideoDTO) -> VideoScreenViewModel(video, get(), get()) }
     viewModel { AppViewModel(get()) }
 
 }
