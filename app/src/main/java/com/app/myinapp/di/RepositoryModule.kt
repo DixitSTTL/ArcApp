@@ -1,5 +1,6 @@
 package com.app.myinapp.di
 
+import com.app.myinapp.data.repository.download.DownloadRepositoryImpl
 import com.app.myinapp.data.repository.imagePreview.ImagePreviewRepositoryImpl
 import com.app.myinapp.data.repository.mainscreen.MainScreenRepositoryImpl
 import com.app.myinapp.data.repository.mainscreen.dataSource.ImageListPagingSource
@@ -7,6 +8,7 @@ import com.app.myinapp.data.repository.mainscreen.dataSource.VideoListPagingSour
 import com.app.myinapp.data.repository.search.SearchScreenRepositoryImpl
 import com.app.myinapp.data.repository.setting.SettingScreenRepositoryImpl
 import com.app.myinapp.data.repository.user.UserRepositoryImpl
+import com.app.myinapp.domain.repository.DownloadRepository
 import com.app.myinapp.domain.repository.ImagePreviewRepository
 import com.app.myinapp.domain.repository.MainScreenRepository
 import com.app.myinapp.domain.repository.SearchScreenRepository
@@ -21,6 +23,7 @@ val RepositoryModule = module {
     single<SearchScreenRepository> { SearchScreenRepositoryImpl(get()) }
     single<ImagePreviewRepository> { ImagePreviewRepositoryImpl(get(), get()) }
     single<SettingScreenRepository> { SettingScreenRepositoryImpl(get()) }
+    single<DownloadRepository> { DownloadRepositoryImpl(get()) }
     factory { ImageListPagingSource(get()) }
     factory { VideoListPagingSource(get()) }
 }

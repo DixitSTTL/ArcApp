@@ -3,16 +3,9 @@ package com.app.myinapp.data.repository.imagePreview
 import android.app.Application
 import android.app.WallpaperManager
 import android.content.Intent
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.workDataOf
 import com.app.myinapp.domain.model.Photo
 import com.app.myinapp.domain.repository.ImagePreviewRepository
 import com.app.myinapp.domain.room.DatabaseHelper
-import com.app.myinapp.domain.workmanager.FirstWorker
 import com.app.myinapp.presentation.imagePreview.WallpaperType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -66,21 +59,6 @@ class ImagePreviewRepositoryImpl(
                 )
             }
         }
-
-    }
-
-    override suspend fun downloadWallpaper(photoDTO: Photo) {
-        val constraints = Constraints.Builder()
-//            .setRequiredNetworkType(NetworkType.UNMETERED)
-            .build()
-        val data = workDataOf("image_url" to photoDTO.original)
-        val firstRequest: OneTimeWorkRequest =
-            OneTimeWorkRequestBuilder<FirstWorker>()
-                .setConstraints(constraints)
-                .setInputData(data)
-                .build()
-
-        WorkManager.getInstance(androidApplication).enqueue(firstRequest)
 
     }
 

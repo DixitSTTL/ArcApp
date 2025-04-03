@@ -11,7 +11,6 @@ interface ImagePreviewRepository {
         type: WallpaperType
     )
 
-    suspend fun downloadWallpaper(photoDTO: Photo)
     suspend fun likeWallpaper(photoDTO: Photo)
     suspend fun disLikeWallpaper(photoDTO: Photo)
     suspend fun checkLiked(photoDTO: Photo): Flow<Photo>

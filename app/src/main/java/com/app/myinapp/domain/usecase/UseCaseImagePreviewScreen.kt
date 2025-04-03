@@ -7,10 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 class UseCaseImagePreviewScreen(private val imagePreviewRepository: ImagePreviewRepository) {
 
-    suspend fun downloadImage(data: Photo) {
-        return imagePreviewRepository.downloadWallpaper(data)
-    }
-
     suspend fun setWallpaper(
         data: Photo,
         type: WallpaperType,

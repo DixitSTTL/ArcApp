@@ -1,16 +1,20 @@
 package com.app.myinapp.presentation.videoPreview
 
 import android.app.Application
+import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.app.myinapp.data.model.VideoDTO
+import com.app.myinapp.domain.usecase.UseCaseDownloadFile
 import com.app.myinapp.presentation.base.BaseViewModel
+import kotlinx.coroutines.launch
 
 class VideoScreenViewModel(
     private val data: VideoDTO,
     private val context: Application,
+    private val useCaseDownloadFile: UseCaseDownloadFile,
     ) : BaseViewModel<VideoScreenState, VideoScreenInteract>(VideoScreenState()) {
 
     val exoplayer = ExoPlayer.Builder(context).build()
@@ -57,6 +61,16 @@ class VideoScreenViewModel(
                     }
                 }
             })
+        }
+    }
+
+    fun downloadVideo(videoDTO: VideoDTO){
+        viewModelScope.launch {
+            useCaseDownloadFile.downloadFile(
+                url = videoDTO.videoFiles[0].link,
+                name = "video_${System.currentTimeMillis()}",
+                type = "MP4"
+            )
         }
     }
 
