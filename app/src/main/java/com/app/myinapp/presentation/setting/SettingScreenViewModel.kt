@@ -34,13 +34,13 @@ class SettingScreenViewModel(
     }
 
     fun setDynamicUI(status: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCaseTheme.switchDynamicTheme(status)
         }
     }
 
     fun setUITheme(status: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCaseTheme.switchUiTheme(status)
         }
     }

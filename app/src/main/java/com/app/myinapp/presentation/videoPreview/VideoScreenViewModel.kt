@@ -9,6 +9,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.app.myinapp.data.model.VideoDTO
 import com.app.myinapp.domain.usecase.UseCaseDownloadFile
 import com.app.myinapp.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class VideoScreenViewModel(
@@ -65,7 +66,7 @@ class VideoScreenViewModel(
     }
 
     fun downloadVideo(videoDTO: VideoDTO){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCaseDownloadFile.downloadFile(
                 url = videoDTO.videoFiles[0].link,
                 name = "video_${System.currentTimeMillis()}",

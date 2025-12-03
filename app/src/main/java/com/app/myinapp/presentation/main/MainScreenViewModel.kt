@@ -58,7 +58,7 @@ class MainScreenViewModel(
     }
 
     private fun fetchFlowVideo() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             setDataState(getStateData().copy(isLoading = true))
             val responseFlow = useCaseMainScreen.fetchFlowVideo().cachedIn(viewModelScope)
             setDataState(getStateData().copy(isLoading = false, videoDTOFlowList = responseFlow))
@@ -66,7 +66,7 @@ class MainScreenViewModel(
     }
 
     private fun fetchFlowImage() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             setDataState(getStateData().copy(isLoading = true))
             val responseFlow = useCaseMainScreen.fetchFlowImage().cachedIn(viewModelScope)
             setDataState(getStateData().copy(isLoading = false, imageFlowList = responseFlow))

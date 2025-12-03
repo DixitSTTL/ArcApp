@@ -1,9 +1,11 @@
 package com.app.myinapp.presentation.search
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.app.myinapp.domain.usecase.UseCaseSearchScreen
 import com.app.myinapp.presentation.base.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchScreenViewModel(
@@ -11,7 +13,8 @@ class SearchScreenViewModel(
 ) : BaseViewModel<SearchScreenState, SearchScreenInteract>(SearchScreenState()) {
 
     fun fetchFlowSearchImage() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("viewModelScope:::","fetchFlowSearchImage "+ Thread.currentThread().name)
             setDataState(getStateData().copy(isLoading = true))
             val responseFlow =
                 useCaseSearchScreen.fetchFlowSearchImage(getStateData().query).cachedIn(viewModelScope)
@@ -20,7 +23,9 @@ class SearchScreenViewModel(
     }
 
     fun fetchFlowSearchVideo() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("viewModelScope:::","fetchFlowSearchVideo "+ Thread.currentThread().name)
+
             setDataState(getStateData().copy(isLoading = true))
             val responseFlow =
                 useCaseSearchScreen.fetchFlowSearchVideo(getStateData().query).cachedIn(viewModelScope)

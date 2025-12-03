@@ -3,6 +3,7 @@ package com.app.myinapp.presentation.app
 import androidx.lifecycle.viewModelScope
 import com.app.myinapp.domain.usecase.UseCaseTheme
 import com.app.myinapp.presentation.base.StateViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -17,7 +18,7 @@ class AppViewModel(
     }
 
     private fun fetchUiTheme() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCaseTheme.getUiTheme().collectLatest { it ->
 
                 setDataState(getStateData().copy(isDynamicUi = it))
@@ -27,7 +28,7 @@ class AppViewModel(
     }
 
     private fun fetchDynamicTheme() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCaseTheme.getDynamicTheme().collectLatest { it ->
                 setDataState(getStateData().copy(isDarkMode = it))
             }

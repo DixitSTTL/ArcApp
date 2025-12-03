@@ -20,7 +20,7 @@ class ImagePreviewViewModel(
     }
 
     fun shareImage() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             useCaseImagePreviewScreen.shareImage(photo)
         }
     }
