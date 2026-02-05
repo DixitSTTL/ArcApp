@@ -14,7 +14,7 @@ composeBom = "2025.02.00"
 
 ktor = "3.1.0"
 coil = "3.1.0"
-koin_version = "4.0.0"
+koin_version = "4.1.1"
 room = "2.6.1"
 navigationCompose = "2.8.8"
 paging = "3.3.6"
