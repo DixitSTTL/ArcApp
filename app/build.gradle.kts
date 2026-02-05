@@ -101,7 +101,7 @@ dependencies {
     implementation(libs.androidx.paging.compose)
 
     //Gson
-    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("com.google.code.gson:gson:2.13.2")
 
     //Serialization
     implementation(libs.kotlinx.serialization.json)
