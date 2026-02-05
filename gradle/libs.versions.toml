@@ -21,7 +21,7 @@ paging = "3.3.6"
 kotlinxSerializationJson = "1.8.0"
 workRuntimeKtx = "2.10.0"
 media3 = "1.5.1"
-uiTextGoogleFonts = "1.7.8"
+uiTextGoogleFonts = "1.10.2"
 
 
 [libraries]
